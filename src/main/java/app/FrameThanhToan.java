@@ -44,7 +44,7 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 //import entity.NhanVien;
 //import entity.PhongHat;
 
-public class FrameTraPhong extends JFrame  {
+public class FrameThanhToan extends JFrame  {
 
 	public static JTable tableChonPhong;
 	private static DefaultTableModel tableModelChonPhong;
@@ -83,7 +83,7 @@ public class FrameTraPhong extends JFrame  {
 //		datPhong_DAO = new DatPhong_DAO();
 		// ------------------------------
 
-		setTitle("TRẢ PHÒNG");
+		setTitle("THANH TOÁN");
 		setSize(948, 440);
 		setLocationRelativeTo(null);
 		setResizable(false);
@@ -93,11 +93,11 @@ public class FrameTraPhong extends JFrame  {
 
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent evt) {
-				new FrameDatPhong().setVisible(true);
+				new FrameDatBan().setVisible(true);
 			}
 		});
 		JPanel pnlContentPane = new JPanel();
-		pnlContentPane.setBackground(Color.WHITE);
+		pnlContentPane.setBackground(new Color(248, 227, 182));
 		pnlContentPane.setLayout(null);
 		setContentPane(pnlContentPane);
 		/*
@@ -108,10 +108,10 @@ public class FrameTraPhong extends JFrame  {
 		pnlTraPhong.setBounds(350, 10, (int) (d.getWidth() - 570), (int) (d.getHeight() - 90));
 		pnlTraPhong.setBackground(Color.WHITE);
 		pnlTraPhong.setBorder(
-				BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "CHỌN PHÒNG CẦN TRẢ: "));
+				BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "CHỌN BÀN CẦN TRẢ: "));
 		pnlContentPane.add(pnlTraPhong);
 
-		String[] header = { "Mã phòng", "Tên phòng", "Giá/1h", "Loại phòng", "Thời gian đặt phòng", "Tên khách hàng" };
+		String[] header = { "Mã bàn", "Tên bàn"};
 		tableModelChonPhong = new DefaultTableModel(header, 0);
 		tableChonPhong = new JTable(tableModelChonPhong) {
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
@@ -131,29 +131,30 @@ public class FrameTraPhong extends JFrame  {
 		tableChonPhong.setRowHeight(tableChonPhong.getRowHeight() + 20);
 		tableChonPhong.setSelectionBackground(new Color(255, 255, 128));
 		JTableHeader tableHeader = tableChonPhong.getTableHeader();
-		tableHeader.setBackground(new Color(219, 255, 255));
-		tableHeader.setFont(new Font("Times New Roman", Font.BOLD, 15));
+		tableHeader.setBackground(new Color(173, 119, 72));
+		tableHeader.setForeground(new Color(255, 255, 255));
+		tableHeader.setFont(new Font("Arial", Font.BOLD, 15));
+		tableHeader.setPreferredSize(new Dimension(WIDTH, 40));
 		tableHeader.setResizingAllowed(false);
 		tableHeader.setReorderingAllowed(false);
-		tableHeader.setPreferredSize(new Dimension(WIDTH, 30));
+
 
 		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
 		rightRenderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
-		tableChonPhong.getColumn("Giá/1h").setCellRenderer(rightRenderer);
 		pnlTraPhong.add(new JScrollPane(tableChonPhong));
 
 		// Chọn phòng
 		JPanel pnlChonPhong = new JPanel();
 		pnlChonPhong.setLayout(null);
 		pnlChonPhong.setBounds(20, 18, 315, 102);
-		pnlChonPhong.setBackground(Color.WHITE);
+		pnlChonPhong.setBackground(new Color(252, 242, 217));
 		pnlChonPhong.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), ""));
 		pnlContentPane.add(pnlChonPhong);
 
-		JLabel lblChonPhong = new JLabel("NHẬP TÊN PHÒNG CẦN TÌM: ", SwingConstants.CENTER);
+		JLabel lblChonPhong = new JLabel("NHẬP TÊN BÀN CẦN TÌM: ", SwingConstants.CENTER);
 		lblChonPhong.setBounds(1, 10, 313, 30);
 		lblChonPhong.setOpaque(true);
-		lblChonPhong.setBackground(new Color(0, 148, 224));
+		lblChonPhong.setBackground(new Color(131, 77, 30));
 		lblChonPhong.setForeground(Color.WHITE);
 		lblChonPhong.setFont(new Font("Arial", Font.BOLD, 15));
 		pnlChonPhong.add(lblChonPhong);
@@ -168,7 +169,7 @@ public class FrameTraPhong extends JFrame  {
 		btnTimPhong = new JButton("", new ImageIcon("image/timkiem.png"));
 		btnTimPhong.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnTimPhong.setBounds(240, 53, 35, 32);
-		btnTimPhong.setBackground(new Color(0, 148, 224));
+		btnTimPhong.setBackground(new Color(131, 77, 30));
 		btnTimPhong.setFocusPainted(false);
 		pnlChonPhong.add(btnTimPhong);
 
@@ -180,137 +181,137 @@ public class FrameTraPhong extends JFrame  {
 
 //		pnThongTinHoaDon.setBounds(20, 125, 315, (int) (d.getHeight() - 205));
 
-		pnThongTinHoaDon.setBounds(20, 125, 315, (int) (d.getHeight() - 105));
+		pnThongTinHoaDon.setBounds(20, 135, 315, (int) (d.getHeight() - 215));
 
-		pnThongTinHoaDon.setBackground(Color.WHITE);
+		pnThongTinHoaDon.setBackground(new Color(252, 242, 217));
 		pnThongTinHoaDon.setBorder(
 				BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "THÔNG TIN HÓA ĐƠN: "));
 		pnlContentPane.add(pnThongTinHoaDon);
 
 		JLabel lblNhanVien = new JLabel("TÊN NHÂN VIÊN: ");
 		lblNhanVien.setBounds(15, 37, 150, 25);
-		lblNhanVien.setFont(new Font("Arial", Font.PLAIN, 13));
+		lblNhanVien.setFont(new Font("Arial", Font.BOLD, 13));
 		pnThongTinHoaDon.add(lblNhanVien);
 		txtNhanVien = new JTextField();
 		txtNhanVien.setEditable(false);
 		txtNhanVien.setBounds(145, 35, 150, 30);
-		txtNhanVien.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+		txtNhanVien.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		pnThongTinHoaDon.add(txtNhanVien);
 
-		lblTenKH = new JLabel("TÊN KHÁCH HÀNG: ");
-		lblTenKH.setBounds(15, 82, 150, 25);
-		lblTenKH.setFont(new Font("Arial", Font.PLAIN, 13));
-		pnThongTinHoaDon.add(lblTenKH);
-		txtKH = new JTextField();
-		txtKH.setEditable(false);
-		txtKH.setBounds(145, 80, 150, 30);
-		txtKH.setFont(new Font("Times New Roman", Font.PLAIN, 13));
-		pnThongTinHoaDon.add(txtKH);
+//		lblTenKH = new JLabel("TÊN KHÁCH HÀNG: ");
+//		lblTenKH.setBounds(15, 82, 150, 25);
+//		lblTenKH.setFont(new Font("Arial", Font.BOLD, 13));
+//		pnThongTinHoaDon.add(lblTenKH);
+//		txtKH = new JTextField();
+//		txtKH.setEditable(false);
+//		txtKH.setBounds(145, 80, 150, 30);
+//		txtKH.setFont(new Font("Times New Roman", Font.BOLD, 13)); 45 setBounds(15, 127, 150, 25); 
+//		pnThongTinHoaDon.add(txtKH);
 
-		JLabel lblTenPhong = new JLabel("TÊN PHÒNG: ");
-		lblTenPhong.setBounds(15, 127, 150, 25);
-		lblTenPhong.setFont(new Font("Arial", Font.PLAIN, 13));
+		JLabel lblTenPhong = new JLabel("TÊN BÀN: ");
+		lblTenPhong.setBounds(15, 82, 150, 25);
+		lblTenPhong.setFont(new Font("Arial", Font.BOLD, 13));
 		pnThongTinHoaDon.add(lblTenPhong);
 		txtTenPhong = new JTextField();
 		txtTenPhong.setEditable(false);
-		txtTenPhong.setBounds(145, 125, 150, 30);
-		txtTenPhong.setFont(new Font("Times New Roman", Font.PLAIN, 13));
+		txtTenPhong.setBounds(145, 80, 150, 30);
+		txtTenPhong.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		pnThongTinHoaDon.add(txtTenPhong);
 
-		JLabel lblLoaiPhong = new JLabel("LOẠI PHÒNG: ");
-		lblLoaiPhong.setBounds(15, 172, 150, 25);
-		lblLoaiPhong.setFont(new Font("Arial", Font.PLAIN, 13));
-		pnThongTinHoaDon.add(lblLoaiPhong);
-		txtLoaiPhong = new JTextField();
-		txtLoaiPhong.setEditable(false);
-		txtLoaiPhong.setBounds(145, 170, 150, 30);
-		txtLoaiPhong.setFont(new Font("Times New Roman", Font.PLAIN, 13));
-		pnThongTinHoaDon.add(txtLoaiPhong);
+//		JLabel lblLoaiPhong = new JLabel("LOẠI PHÒNG: ");
+//		lblLoaiPhong.setBounds(15, 172, 150, 25);
+//		lblLoaiPhong.setFont(new Font("Arial", Font.BOLD, 13));
+//		pnThongTinHoaDon.add(lblLoaiPhong);
+//		txtLoaiPhong = new JTextField();
+//		txtLoaiPhong.setEditable(false);
+//		txtLoaiPhong.setBounds(145, 170, 150, 30);
+//		txtLoaiPhong.setFont(new Font("Times New Roman", Font.BOLD, 13));
+//		pnThongTinHoaDon.add(txtLoaiPhong);
 
-		JLabel lblGiaPhong = new JLabel("GIÁ PHÒNG/1H: ");
-		lblGiaPhong.setBounds(15, 217, 150, 25);
-		lblGiaPhong.setFont(new Font("Arial", Font.PLAIN, 13));
-		pnThongTinHoaDon.add(lblGiaPhong);
-		txtGiaPhong = new JTextField();
-		txtGiaPhong.setEditable(false);
-		txtGiaPhong.setBounds(145, 215, 150, 30);
-		txtGiaPhong.setFont(new Font("Times New Roman", Font.PLAIN, 13));
-		pnThongTinHoaDon.add(txtGiaPhong);
+//		JLabel lblGiaPhong = new JLabel("GIÁ PHÒNG/1H: ");
+//		lblGiaPhong.setBounds(15, 217, 150, 25);
+//		lblGiaPhong.setFont(new Font("Arial", Font.BOLD, 13));
+//		pnThongTinHoaDon.add(lblGiaPhong);
+//		txtGiaPhong = new JTextField();
+//		txtGiaPhong.setEditable(false);
+//		txtGiaPhong.setBounds(145, 215, 150, 30);
+//		txtGiaPhong.setFont(new Font("Times New Roman", Font.BOLD, 13));
+//		pnThongTinHoaDon.add(txtGiaPhong);
 
-		JLabel lblThoiGianDen = new JLabel("THỜI GIAN ĐẾN: ");
-		lblThoiGianDen.setBounds(15, 262, 150, 25);
-		lblThoiGianDen.setFont(new Font("Arial", Font.PLAIN, 13));
-		pnThongTinHoaDon.add(lblThoiGianDen);
-		txtThoiGianDen = new JTextField();
-		txtThoiGianDen.setEditable(false);
-		txtThoiGianDen.setFont(new Font("Times New Roman", Font.PLAIN, 13));
-		txtThoiGianDen.setBounds(145, 260, 150, 30);
-		pnThongTinHoaDon.add(txtThoiGianDen);
+//		JLabel lblThoiGianDen = new JLabel("THỜI GIAN ĐẾN: ");
+//		lblThoiGianDen.setBounds(15, 262, 150, 25);
+//		lblThoiGianDen.setFont(new Font("Arial", Font.BOLD, 13));
+//		pnThongTinHoaDon.add(lblThoiGianDen);
+//		txtThoiGianDen = new JTextField();
+//		txtThoiGianDen.setEditable(false);
+//		txtThoiGianDen.setFont(new Font("Times New Roman", Font.BOLD, 13));
+//		txtThoiGianDen.setBounds(145, 260, 150, 30);
+//		pnThongTinHoaDon.add(txtThoiGianDen);
 
-		JLabel lblThoiGianTra = new JLabel("THỜI GIAN TRẢ: ");
-		lblThoiGianTra.setBounds(15, 307, 150, 25);
-		lblThoiGianTra.setFont(new Font("Arial", Font.PLAIN, 13));
-		pnThongTinHoaDon.add(lblThoiGianTra);
-		txtThoiGianTra = new JTextField();
-		txtThoiGianTra.setEditable(false);
-		txtThoiGianTra.setFont(new Font("Times New Roman", Font.PLAIN, 13));
-		txtThoiGianTra.setBounds(145, 305, 150, 30);
-		pnThongTinHoaDon.add(txtThoiGianTra);
+//		JLabel lblThoiGianTra = new JLabel("THỜI GIAN TRẢ: ");
+//		lblThoiGianTra.setBounds(15, 307, 150, 25);
+//		lblThoiGianTra.setFont(new Font("Arial", Font.BOLD, 13));
+//		pnThongTinHoaDon.add(lblThoiGianTra);
+//		txtThoiGianTra = new JTextField();
+//		txtThoiGianTra.setEditable(false);
+//		txtThoiGianTra.setFont(new Font("Times New Roman", Font.BOLD, 13));
+//		txtThoiGianTra.setBounds(145, 305, 150, 30);
+//		pnThongTinHoaDon.add(txtThoiGianTra);
 
-		JLabel lblSoGio = new JLabel("TỔNG GIỜ THUÊ: ");
-		lblSoGio.setBounds(15, 352, 150, 25);
-		lblSoGio.setFont(new Font("Arial", Font.PLAIN, 13));
-		pnThongTinHoaDon.add(lblSoGio);
-		txtSoGio = new JTextField();
-		txtSoGio.setEditable(false);
-		txtSoGio.setFont(new Font("Times New Roman", Font.PLAIN, 13));
-		txtSoGio.setBounds(145, 350, 150, 30);
-		pnThongTinHoaDon.add(txtSoGio);
+//		JLabel lblSoGio = new JLabel("TỔNG GIỜ THUÊ: ");
+//		lblSoGio.setBounds(15, 352, 150, 25);
+//		lblSoGio.setFont(new Font("Arial", Font.BOLD, 13));
+//		pnThongTinHoaDon.add(lblSoGio);
+//		txtSoGio = new JTextField();
+//		txtSoGio.setEditable(false);
+//		txtSoGio.setFont(new Font("Times New Roman", Font.BOLD, 13));
+//		txtSoGio.setBounds(145, 350, 150, 30);
+//		pnThongTinHoaDon.add(txtSoGio);
 
-		JLabel lblTienPhong = new JLabel("TIỀN PHÒNG :");
-		lblTienPhong.setBounds(15, 397, 150, 25);
-		lblTienPhong.setFont(new Font("Arial", Font.PLAIN, 13));
+		JLabel lblTienPhong = new JLabel("TIỀN DỊCH VỤ:");
+		lblTienPhong.setBounds(15, 127, 150, 25);
+		lblTienPhong.setFont(new Font("Arial", Font.BOLD, 13));
 		pnThongTinHoaDon.add(lblTienPhong);
 		txtTienPhong = new JTextField();
 		txtTienPhong.setEditable(false);
-		txtTienPhong.setFont(new Font("Times New Roman", Font.PLAIN, 13));
-		txtTienPhong.setBounds(145, 395, 150, 30);
+		txtTienPhong.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		txtTienPhong.setBounds(145, 125, 150, 30);
 		pnThongTinHoaDon.add(txtTienPhong);
 
-		JLabel lblTienDV = new JLabel("TIỀN DỊCH VỤ :");
-		lblTienDV.setFont(new Font("Arial", Font.PLAIN, 13));
-		lblTienDV.setBounds(15, 442, 150, 25);
+		JLabel lblTienDV = new JLabel("THUẾ:");
+		lblTienDV.setFont(new Font("Arial", Font.BOLD, 13));
+		lblTienDV.setBounds(15, 172, 150, 25);
 		pnThongTinHoaDon.add(lblTienDV);
 		txtTienDV = new JTextField();
 		txtTienDV.setEditable(false);
-		txtTienDV.setFont(new Font("Times New Roman", Font.PLAIN, 13));
-		txtTienDV.setBounds(145, 440, 150, 30);
+		txtTienDV.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		txtTienDV.setBounds(145, 170, 150, 30);
 		pnThongTinHoaDon.add(txtTienDV);
 
-		JLabel lblThanhToan = new JLabel("THANH TOÁN: ");
-		lblThanhToan.setFont(new Font("Arial", Font.PLAIN, 13));
-		lblThanhToan.setBounds(15, 487, 150, 30);
+		JLabel lblThanhToan = new JLabel("TỔNG TIỀN:");
+		lblThanhToan.setFont(new Font("Arial", Font.BOLD, 13));
+		lblThanhToan.setBounds(15, 217, 150, 25);
 		pnThongTinHoaDon.add(lblThanhToan);
 		txtThanhToan = new JTextField();
 		txtThanhToan.setEditable(false);
-		txtThanhToan.setFont(new Font("Times New Roman", Font.PLAIN, 13));
-		txtThanhToan.setBounds(145, 485, 150, 30);
+		txtThanhToan.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		txtThanhToan.setBounds(145, 215, 150, 30);
 		pnThongTinHoaDon.add(txtThanhToan);
 
 		btnInHoaDon = new JButton("IN HÓA ĐƠN");
-		btnInHoaDon.setBounds(75, 535, 165, 40);
+		btnInHoaDon.setBounds(75, 270, 165, 40);
 		btnInHoaDon.setIcon(new ImageIcon("image/inhoadon.png"));
 		btnInHoaDon.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnInHoaDon.setBackground(new Color(79, 173, 84));
+		btnInHoaDon.setBackground(new Color(131, 77, 30));
 		btnInHoaDon.setForeground(Color.WHITE);
 		btnInHoaDon.setFocusPainted(false);
 		pnThongTinHoaDon.add(btnInHoaDon);
 
 		btnThanhToan = new JButton("THANH TOÁN");
-		btnThanhToan.setBounds(75, 590, 165, 40);
+		btnThanhToan.setBounds(75, 330, 165, 40);
 		btnThanhToan.setIcon(new ImageIcon("image/thanhtoan.png"));
 		btnThanhToan.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnThanhToan.setBackground(new Color(79, 173, 84));
+		btnThanhToan.setBackground(new Color(131, 77, 30));
 		btnThanhToan.setForeground(Color.WHITE);
 		btnThanhToan.setFocusPainted(false);
 		pnThongTinHoaDon.add(btnThanhToan);

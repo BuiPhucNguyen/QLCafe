@@ -1,6 +1,7 @@
 package app;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -28,7 +29,7 @@ public class GUI_NhanVien extends JFrame implements ActionListener, MouseListene
 	private JLabel lblDangXuat;
 
 	public GUI_NhanVien() {
-		setTitle("KARAOKE DIAMOND");
+		setTitle("CAFE DIAMOND");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setExtendedState(MAXIMIZED_BOTH);
 		setSize(1000, 800);
@@ -37,6 +38,9 @@ public class GUI_NhanVien extends JFrame implements ActionListener, MouseListene
 		setIconImage(icon.getImage());
 		UIManager.put("TabbedPane.selected", new Color(194, 148, 108));
 		UIManager.put("TabbedPane.contentAreaColor", new Color(248, 227, 182));
+		UIManager.put("TabbedPane.shadow",new Color(248, 227, 182));
+		UIManager.put("TabbedPane.background",new Color(248, 227, 182));
+		
 		add(createTabbedPane());
 	}
 	
@@ -52,7 +56,7 @@ public class GUI_NhanVien extends JFrame implements ActionListener, MouseListene
 		tabbedPane.setUI(new BasicTabbedPaneUI() {
 			@Override
 			protected int calculateTabHeight(int tabPlacement, int tabIndex, int fontHeight) {
-				return 264;
+				return 156; //264
 			}
 			@Override
 			protected int calculateTabWidth(int tabPlacement, int tabIndex, FontMetrics metrics) {
@@ -63,9 +67,9 @@ public class GUI_NhanVien extends JFrame implements ActionListener, MouseListene
 		tabbedPane.setForeground(Color.WHITE);
 		tabbedPane.setFont(new Font("Tahoma", Font.BOLD, 13));
 
-		FrameDatPhong frameDP = new FrameDatPhong();
-		FrameTraPhong frameTP = new FrameTraPhong();
-		FrameKhachHang frameKH = new FrameKhachHang();
+		FrameDatBan frameDP = new FrameDatBan();
+		FrameThanhToan frameTP = new FrameThanhToan();
+//		FrameKhachHang frameKH = new FrameKhachHang();
 
 		/* create JPanel, which is content of tabs */
 		JPanel pnlTrangChu = createPanelTrangChu();
@@ -75,10 +79,9 @@ public class GUI_NhanVien extends JFrame implements ActionListener, MouseListene
 
 		/* add tab with JPanel */
 		tabbedPane.addTab("TRANG CHỦ", new ImageIcon("image/trangchu.png"), pnlTrangChu, "TRANG CHỦ");
-		tabbedPane.addTab("ĐẶT PHÒNG", new ImageIcon("image/khachhang.png"), pnlDatPhong, "ĐẶT PHÒNG");
-		tabbedPane.addTab("TRẢ PHÒNG", new ImageIcon("image/phonghat.png"), pnlTraPhong, "TRẢ PHÒNG");
+		tabbedPane.addTab("ĐẶT BÀN", new ImageIcon("image/khachhang.png"), pnlDatPhong, "ĐẶT BÀN");
+		tabbedPane.addTab("THANH TOÁN", new ImageIcon("image/phonghat.png"), pnlTraPhong, "THANH TOÁN");
 //		tabbedPane.addTab("QUẢN LÝ KHÁCH HÀNG", new ImageIcon("image/khachhang.png"), pnlKhachHang, "QUẢN LÝ KHÁCH HÀNG");
-
 		return tabbedPane;
 	}
 

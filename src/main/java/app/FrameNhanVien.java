@@ -55,11 +55,6 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import com.toedter.calendar.JDateChooser;
 
-//import connectDB.ConnectDB;
-//import dao.NhanVien_DAO;
-//import dao.TaiKhoan_DAO;
-//import dao.TraPhong_DAO;
-//import entity.NhanVien;
 
 public class FrameNhanVien extends JFrame {
 	private static JComboBox<String> cmbChucVu;
@@ -75,32 +70,14 @@ public class FrameNhanVien extends JFrame {
 	public static JComboBox<String> cmbMaNV;
 	private JButton btnLamMoi;
 	private JButton btnCapNhat;
-//	private TaiKhoan_DAO taikhoan_dao;
 	private JButton btnXuatExcel;
-//	private TraPhong_DAO traPhong_dao;
 	private static JCheckBox chkDangLam;
 	private static JCheckBox chkDaNghiViec;
 	private static JDateChooser txtNgaySinh;
-//	private static NhanVien_DAO nhanvien_dao;
 	private static String actor;
 
 	public JPanel createPanelNhanVien() {
-		// Xác định đăng nhập
-//		String xacDinhDangNhap = FrameDangNhap.getTaiKhoan();
-//		if (xacDinhDangNhap.substring(0, 2).equals("CQ"))
-//			actor = "Chủ quán";
-//		else
-//			actor = "Quản lý";
-//		// khởi tạo kết nối đến CSDL
-//		try {
-//			ConnectDB.getInstance().connect();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		nhanvien_dao = new NhanVien_DAO();
-//		taikhoan_dao = new TaiKhoan_DAO();
-//		traPhong_dao = new TraPhong_DAO();
-		// ------------------------------
+		
 		Toolkit toolkit = this.getToolkit(); /* Lấy độ phân giải màn hình */
 		Dimension d = toolkit.getScreenSize();
 
@@ -165,7 +142,6 @@ public class FrameNhanVien extends JFrame {
 		cmbMaNV.setBackground(Color.WHITE);
 		cmbMaNV.setEditable(true);
 		cmbMaNV.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-//		docDuLieuVaoCmbMaNV();
 		AutoCompleteDecorator.decorate(cmbMaNV);
 		pnlTimKiem.add(cmbMaNV);
 		cmbMaNV.setMaximumRowCount(3);
@@ -183,7 +159,6 @@ public class FrameNhanVien extends JFrame {
 		cmbTenNV.setBackground(Color.WHITE);
 		cmbTenNV.setEditable(true);
 		cmbTenNV.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-//		docDuLieuVaoCmbTenNV();
 		AutoCompleteDecorator.decorate(cmbTenNV);
 		pnlTimKiem.add(cmbTenNV);
 		cmbTenNV.setMaximumRowCount(3);
@@ -201,7 +176,6 @@ public class FrameNhanVien extends JFrame {
 		cmbSdt.setBackground(Color.WHITE);
 		cmbSdt.setEditable(true);
 		cmbSdt.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-//		docDuLieuVaoCmbSdt();
 		AutoCompleteDecorator.decorate(cmbSdt);
 		pnlTimKiem.add(cmbSdt);
 		cmbSdt.setMaximumRowCount(3);
@@ -233,7 +207,6 @@ public class FrameNhanVien extends JFrame {
 		cmbCmnd.setBackground(Color.WHITE);
 		cmbCmnd.setEditable(true);
 		cmbCmnd.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-//		docDuLieuVaoCmbCmnd();
 		AutoCompleteDecorator.decorate(cmbCmnd);
 		pnlTimKiem.add(cmbCmnd);
 		cmbCmnd.setMaximumRowCount(3);
@@ -265,8 +238,6 @@ public class FrameNhanVien extends JFrame {
 		pnlTimKiem.add(lblChucvu);
 		String[] chucVu = { "Tất cả", "Phục vụ", "Lễ tân" };
 		cmbChucVu = new JComboBox<String>(chucVu);
-//		if (actor.equals("Chủ quán"))
-//			cmbChucVu.addItem("Quản lý");
 		cmbChucVu.setBounds(90, 540, 100, 30);
 		cmbChucVu.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		cmbChucVu.setFocusable(false);
@@ -312,8 +283,7 @@ public class FrameNhanVien extends JFrame {
 		pnlDanhSach.setLayout(new GridLayout(1, 0, 0, 0));
 		pnlContentPane.add(pnlDanhSach);
 
-		String[] header = { "Mã nhân viên", "Tên nhân viên", "Ngày sinh", "Giới tính", "CMND/CCCD", "SĐT", "Chức vụ",
-				"Ca làm việc", "Lương", "Tài khoản", "Trạng thái" };
+		String[] header = { "Mã nhân viên", "Tên nhân viên", "Ngày sinh", "Giới tính", "CMND/CCCD", "SĐT", "Chức vụ", "Lương", "Tài khoản", "Trạng thái" };
 		tableModel = new DefaultTableModel(header, 0);
 		table = new JTable(tableModel) {
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
@@ -345,492 +315,12 @@ public class FrameNhanVien extends JFrame {
 		rightRenderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
 		table.getColumn("Lương").setCellRenderer(rightRenderer);
 
-		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		table.getColumnModel().getColumn(0).setPreferredWidth(120);
-		table.getColumnModel().getColumn(1).setPreferredWidth(165);
-		table.getColumnModel().getColumn(2).setPreferredWidth(87);
-		table.getColumnModel().getColumn(4).setPreferredWidth(120);
-		table.getColumnModel().getColumn(5).setPreferredWidth(98);
-		table.getColumnModel().getColumn(6).setPreferredWidth(80);
-		table.getColumnModel().getColumn(7).setPreferredWidth(120);
-		table.getColumnModel().getColumn(8).setPreferredWidth(110);
-		table.getColumnModel().getColumn(9).setPreferredWidth(90);
-		table.getColumnModel().getColumn(10).setPreferredWidth(110);
+		
 
-//		btnThem.addActionListener(this);
-//		btnXoa.addActionListener(this);
-//		btnCapNhat.addActionListener(this);
-//		btnLamMoi.addActionListener(this);
-//		btnTimKiem.addActionListener(this);
-//		btnXuatExcel.addActionListener(this);
-//		table.addMouseListener(this);
 		table.setDefaultEditor(Object.class, null);
 		table.getTableHeader().setReorderingAllowed(false);
-//		docDuLieuDatabaseVaoTable();
 
 		return pnlContentPane;
 	}
-
-//	@Override
-//	public void actionPerformed(ActionEvent e) {
-//		Object o = e.getSource();
-//		if (o.equals(btnThem)) {
-//			new FormThemNV().setVisible(true);
-//		}
-//		if (o.equals(btnCapNhat)) {
-//			int r = table.getSelectedRow();
-//			if (r == -1) {
-//				JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên cần cập nhật!", "Lỗi",
-//						JOptionPane.ERROR_MESSAGE);
-//				return;
-//			} else {
-//				if(tableModel.getValueAt(r, 10).toString().trim().equals("Đã nghỉ việc")) {
-//					JOptionPane.showMessageDialog(this, "Nhân viên đã nghỉ việc nên không được cập nhật!", "Lỗi",
-//							JOptionPane.ERROR_MESSAGE);
-//					return;
-//				}
-//				new FormCapNhatNV().setVisible(true);
-//			}
-//		}
-//		if (o.equals(btnXoa)) {
-//			int r = table.getSelectedRow();
-//			if (r == -1) {
-//				JOptionPane.showMessageDialog(this, "Vui lòng chọn nhân viên cho nghỉ việc!", "Lỗi",
-//						JOptionPane.ERROR_MESSAGE);
-//				return;
-//			}
-//			if(tableModel.getValueAt(r, 10).toString().trim().equals("Đã nghỉ việc")) {
-//				JOptionPane.showMessageDialog(this, "Nhân viên đã nghỉ việc rồi!", "Lỗi",
-//						JOptionPane.ERROR_MESSAGE);
-//				return;
-//			}
-//			int result = JOptionPane.showConfirmDialog(this, "Bạn có chắc sẽ cho nhân viên này nghỉ việc không?",
-//					"Cảnh báo", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-//			if (result == 0) {
-//				String maNV = tableModel.getValueAt(r, 0).toString();
-//				List<NhanVien> listNV = new ArrayList<NhanVien>();
-//				if (actor.equals("Chủ quán"))
-//					listNV = nhanvien_dao.getTatCaNhanVien();
-//				else
-//					listNV = nhanvien_dao.getTatCaNhanVienKhongGomQL();
-//				String tenTaiKhoan = "";
-//				for (NhanVien nv : listNV) {
-//					if (nv.getMaNV().equalsIgnoreCase(maNV)) {
-//						tenTaiKhoan = nv.getTaiKhoan().getTenTaiKhoan();
-//						break;
-//					}
-//				}
-//				nhanvien_dao.delete(maNV);
-//				taikhoan_dao.delete(tenTaiKhoan);
-//				xoaHetDL();
-//				docDuLieuDatabaseVaoTable();
-//			}
-//		}
-//		if (o.equals(btnLamMoi)) {
-//			lamMoiDL();
-//		}
-//		if (o.equals(btnTimKiem)) {
-//			String maNV = cmbMaNV.getSelectedItem().toString().trim();
-//			String tenNV = cmbTenNV.getSelectedItem().toString().trim();
-//			String sdt = cmbSdt.getSelectedItem().toString().trim();
-//			Date ngaySinh = txtNgaySinh.getDate();
-//			String cmnd = cmbCmnd.getSelectedItem().toString().trim();
-//			String chucVu = cmbChucVu.getSelectedItem().toString().trim();
-//			String ca = cmbCa.getSelectedItem().toString().trim();
-//			xoaHetDL();
-//			List<NhanVien> listNV = new ArrayList<NhanVien>();
-//			if (actor.equals("Chủ quán"))
-//				listNV = nhanvien_dao.getTatCaNhanVien();
-//			else
-//				listNV = nhanvien_dao.getTatCaNhanVienKhongGomQL();
-//			if (!maNV.trim().equals("")) {
-//				List<NhanVien> listTemp = new ArrayList<NhanVien>();
-//				for (NhanVien nv : listNV) {
-//					listTemp.add(nv);
-//				}
-//				listNV.clear();
-//				for (NhanVien nv : listTemp) {
-//					if (nv.getMaNV().trim().contains(maNV)) {
-//						listNV.add(nv);
-//					}
-//				}
-//			}
-//			if (!tenNV.trim().equals("")) {
-//				List<NhanVien> listTemp = new ArrayList<NhanVien>();
-//				for (NhanVien nv : listNV) {
-//					listTemp.add(nv);
-//				}
-//				listNV.clear();
-//				for (NhanVien nv : listTemp) {
-//					if (nv.getTenNV().trim().contains(tenNV)) {
-//						listNV.add(nv);
-//					}
-//				}
-//			}
-//			if (!sdt.trim().equals("")) {
-//				List<NhanVien> listTemp = new ArrayList<NhanVien>();
-//				for (NhanVien nv : listNV) {
-//					listTemp.add(nv);
-//				}
-//				listNV.clear();
-//				for (NhanVien nv : listTemp) {
-//					if (nv.getSoDT().trim().contains(sdt)) {
-//						listNV.add(nv);
-//					}
-//				}
-//			}
-//			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-//			if (ngaySinh != null) {
-//				List<NhanVien> listTemp = new ArrayList<NhanVien>();
-//				for (NhanVien nv : listNV) {
-//					listTemp.add(nv);
-//				}
-//				listNV.clear();
-//				for (NhanVien nv : listTemp) {
-//					if (df.format(nv.getNgaySinh()).equals(df.format(ngaySinh))) {
-//						listNV.add(nv);
-//					}
-//				}
-//			}
-//			if (!cmnd.trim().equals("")) {
-//				List<NhanVien> listTemp = new ArrayList<NhanVien>();
-//				for (NhanVien nv : listNV) {
-//					listTemp.add(nv);
-//				}
-//				listNV.clear();
-//				for (NhanVien nv : listTemp) {
-//					if (nv.getCmnd().trim().contains(cmnd)) {
-//						listNV.add(nv);
-//					}
-//				}
-//			}
-//			if (!chucVu.trim().equals("Tất cả")) {
-//				List<NhanVien> listTemp = new ArrayList<NhanVien>();
-//				for (NhanVien nv : listNV) {
-//					listTemp.add(nv);
-//				}
-//				listNV.clear();
-//				for (NhanVien nv : listTemp) {
-//					if (nv.getChucVu().trim().equalsIgnoreCase(chucVu)) {
-//						listNV.add(nv);
-//					}
-//				}
-//			}
-//			if (!ca.trim().equals("Tất cả")) {
-//				List<NhanVien> listTemp = new ArrayList<NhanVien>();
-//				for (NhanVien nv : listNV) {
-//					listTemp.add(nv);
-//				}
-//				listNV.clear();
-//				for (NhanVien nv : listTemp) {
-//					if (nv.getCaLamViec().trim().equalsIgnoreCase(ca)) {
-//						listNV.add(nv);
-//					}
-//				}
-//			}
-//			if (chkDangLam.isSelected() && !chkDaNghiViec.isSelected()) {
-//				List<NhanVien> listTemp = new ArrayList<NhanVien>();
-//				for (NhanVien nv : listNV) {
-//					listTemp.add(nv);
-//				}
-//				listNV.clear();
-//				for (NhanVien nv : listTemp) {
-//					if (!nv.isDaXoa()) {
-//						listNV.add(nv);
-//					}
-//				}
-//			}
-//			if (chkDaNghiViec.isSelected() && !chkDangLam.isSelected()) {
-//				List<NhanVien> listTemp = new ArrayList<NhanVien>();
-//				for (NhanVien nv : listNV) {
-//					listTemp.add(nv);
-//				}
-//				listNV.clear();
-//				for (NhanVien nv : listTemp) {
-//					if (nv.isDaXoa()) {
-//						listNV.add(nv);
-//					}
-//				}
-//			}
-//			if (listNV.size() == 0) {
-//				JOptionPane.showMessageDialog(this, "Không có nhân viên nào phù hợp với tiêu chí", "Lỗi",
-//						JOptionPane.ERROR_MESSAGE);
-//				return;
-//			}
-//			DecimalFormat dfMoney = new DecimalFormat("#,##0.0");
-//			for (NhanVien nv : listNV) {
-//				tableModel.addRow(new Object[] { nv.getMaNV().trim(), nv.getTenNV().trim(), nv.getNgaySinh(),
-//						nv.isGioiTinh() == true ? "Nam" : "Nữ", nv.getCmnd().trim(), nv.getSoDT().trim(),
-//						nv.getChucVu().trim(), nv.getCaLamViec().trim(), dfMoney.format(nv.getLuong()),
-//						nv.getTaiKhoan().getTenTaiKhoan(), nv.isDaXoa() ? "Đã nghỉ việc" : "Đang làm" });
-//			}
-//		}
-//		if (o.equals(btnXuatExcel)) {
-//			JFileChooser fileDialog = new JFileChooser() {
-//				@Override
-//				protected JDialog createDialog(Component parent) throws HeadlessException {
-//					JDialog dialog = super.createDialog(parent);
-//					ImageIcon icon = new ImageIcon("image/logodark.png");
-//					dialog.setIconImage(icon.getImage());
-//					return dialog;
-//				}
-//			};
-//			FileFilter filter = new FileNameExtensionFilter("Excel(.xls)", ".xls");
-//			fileDialog.setAcceptAllFileFilterUsed(false);
-//			fileDialog.addChoosableFileFilter(filter);
-//			int returnVal = fileDialog.showSaveDialog(null);
-//			if (returnVal == JFileChooser.APPROVE_OPTION) {
-//				java.io.File file = fileDialog.getSelectedFile();
-//				String filePath = file.getAbsolutePath();
-//				if(!(filePath.endsWith(".xls") || filePath.endsWith(".xlsx"))) {
-//					filePath += ".xls";
-//				}
-//				if (xuatExcel(filePath))
-//					JOptionPane.showMessageDialog(this, "Ghi file thành công!!", "Thành công",
-//							JOptionPane.INFORMATION_MESSAGE);
-//				else
-//					JOptionPane.showMessageDialog(this, "Ghi file thất bại!!", "Lỗi", JOptionPane.ERROR_MESSAGE);
-//			}
-//		}
-//	}
-//
-//	public static void lamMoiDL() {
-//		cmbCa.setSelectedIndex(0);
-//		cmbChucVu.setSelectedIndex(0);
-//		cmbTenNV.setSelectedIndex(0);
-//		cmbMaNV.setSelectedIndex(0);
-//		cmbCmnd.setSelectedIndex(0);
-//		cmbSdt.setSelectedIndex(0);
-//		txtNgaySinh.setDate(null);
-//		chkDangLam.setSelected(true);
-//		chkDaNghiViec.setSelected(true);
-//		xoaHetDL();
-//		docDuLieuDatabaseVaoTable();
-//	}
-//
-//	public static void xoaHetDL() {
-//		DefaultTableModel dm = (DefaultTableModel) table.getModel();
-//		dm.setRowCount(0);
-//	}
-//
-//	public static void docDuLieuDatabaseVaoTable() {
-//		List<NhanVien> listNV = new ArrayList<NhanVien>();
-//		if (actor.equals("Chủ quán"))
-//			listNV = nhanvien_dao.getTatCaNhanVien();
-//		else
-//			listNV = nhanvien_dao.getTatCaNhanVienKhongGomQL();
-//		DecimalFormat df = new DecimalFormat("#,##0.0");
-//
-//		for (NhanVien nv : listNV) {
-//			tableModel.addRow(new Object[] { nv.getMaNV().trim(), nv.getTenNV().trim(), nv.getNgaySinh(),
-//					nv.isGioiTinh() == true ? "Nam" : "Nữ", nv.getCmnd().trim(), nv.getSoDT().trim(),
-//					nv.getChucVu().trim(), nv.getCaLamViec().trim(), df.format(nv.getLuong()),
-//					nv.getTaiKhoan().getTenTaiKhoan(), nv.isDaXoa() ? "Đã nghỉ việc" : "Đang làm" });
-//		}
-//	}
-//
-//	public static void docDuLieuVaoCmbTenNV() {
-//		List<NhanVien> listNV = new ArrayList<NhanVien>();
-//		if (actor.equals("Chủ quán"))
-//			listNV = nhanvien_dao.getTatCaNhanVien();
-//		else
-//			listNV = nhanvien_dao.getTatCaNhanVienKhongGomQL();
-//		cmbTenNV.addItem("");
-//		for (NhanVien nv : listNV) {
-//			cmbTenNV.addItem(nv.getTenNV().trim());
-//		}
-//	}
-//
-//	public static void docDuLieuVaoCmbMaNV() {
-//		List<NhanVien> listNV = new ArrayList<NhanVien>();
-//		if (actor.equals("Chủ quán"))
-//			listNV = nhanvien_dao.getTatCaNhanVien();
-//		else
-//			listNV = nhanvien_dao.getTatCaNhanVienKhongGomQL();
-//		cmbMaNV.addItem("");
-//		for (NhanVien nv : listNV) {
-//			cmbMaNV.addItem(nv.getMaNV().trim());
-//		}
-//	}
-//
-//	public static void docDuLieuVaoCmbCmnd() {
-//		List<NhanVien> listNV = new ArrayList<NhanVien>();
-//		if (actor.equals("Chủ quán"))
-//			listNV = nhanvien_dao.getTatCaNhanVien();
-//		else
-//			listNV = nhanvien_dao.getTatCaNhanVienKhongGomQL();
-//		cmbCmnd.addItem("");
-//		for (NhanVien nv : listNV) {
-//			cmbCmnd.addItem(nv.getCmnd().trim());
-//		}
-//	}
-//
-//	public static void docDuLieuVaoCmbSdt() {
-//		List<NhanVien> listNV = new ArrayList<NhanVien>();
-//		if (actor.equals("Chủ quán"))
-//			listNV = nhanvien_dao.getTatCaNhanVien();
-//		else
-//			listNV = nhanvien_dao.getTatCaNhanVienKhongGomQL();
-//		cmbSdt.addItem("");
-//		for (NhanVien nv : listNV) {
-//			cmbSdt.addItem(nv.getSoDT().trim());
-//		}
-//	}
-//
-//	public boolean xuatExcel(String filePath) {
-//		try {
-//			FileOutputStream fileOut = new FileOutputStream(filePath);
-//			// Tạo sheet Danh sách khách hàng
-//			HSSFWorkbook workbook = new HSSFWorkbook();
-//			HSSFSheet worksheet = workbook.createSheet("DANH SÁCH NHÂN VIÊN");
-//
-//			HSSFRow row;
-//			HSSFCell cell;
-//
-//			// Dòng 1 tên
-//			cell = worksheet.createRow(1).createCell(1);
-//
-//			HSSFFont newFont = cell.getSheet().getWorkbook().createFont();
-//			newFont.setBold(true);
-//			newFont.setFontHeightInPoints((short) 13);
-//			CellStyle styleTenDanhSach = worksheet.getWorkbook().createCellStyle();
-//			styleTenDanhSach.setAlignment(HorizontalAlignment.CENTER);
-//			styleTenDanhSach.setFont(newFont);
-//
-//			cell.setCellValue("DANH SÁCH NHÂN VIÊN");
-//			cell.setCellStyle(styleTenDanhSach);
-//
-//			String[] header = { "STT", "Mã nhân viên", "Tên nhân viên", "Ngày sinh", "Giới tính", "CMND/CCCD", "SĐT",
-//					"Chức vụ", "Ca làm việc", "Lương", "Tài khoản", "Trạng thái" };
-//			worksheet.addMergedRegion(new CellRangeAddress(1, 1, 1, header.length));
-//
-//			// Dòng 2 người lập
-//			row = worksheet.createRow(2);
-//
-//			cell = row.createCell(1);
-//			cell.setCellValue("Người lập:");
-//			cell = row.createCell(2);
-//
-//			NhanVien nv = traPhong_dao.getNhanVienSuDung(FrameDangNhap.getTaiKhoan());
-//			if (nv == null)
-//				cell.setCellValue("Chủ quán");
-//			else
-//				cell.setCellValue(nv.getTenNV());
-//			worksheet.addMergedRegion(new CellRangeAddress(2, 2, 2, 3));
-//
-//			// Dòng 3 ngày lập
-//			row = worksheet.createRow(3);
-//			cell = row.createCell(1);
-//			cell.setCellValue("Ngày lập:");
-//			cell = row.createCell(2);
-//			SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-//			cell.setCellValue(df.format(new Date()));
-//			worksheet.addMergedRegion(new CellRangeAddress(3, 3, 2, 3));
-//
-//			// Dòng 4 tên các cột
-//			row = worksheet.createRow(4);
-//
-//			HSSFFont fontHeader = cell.getSheet().getWorkbook().createFont();
-//			fontHeader.setBold(true);
-//
-//			CellStyle styleHeader = worksheet.getWorkbook().createCellStyle();
-//			styleHeader.setFont(fontHeader);
-//			styleHeader.setBorderBottom(BorderStyle.THIN);
-//			styleHeader.setBorderTop(BorderStyle.THIN);
-//			styleHeader.setBorderLeft(BorderStyle.THIN);
-//			styleHeader.setBorderRight(BorderStyle.THIN);
-//			styleHeader.setAlignment(HorizontalAlignment.CENTER);
-//
-//			styleHeader.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
-//			styleHeader.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-//
-//			for (int i = 0; i < header.length; i++) {
-//				cell = row.createCell(i + 1);
-//				cell.setCellValue(header[i]);
-//				cell.setCellStyle(styleHeader);
-//			}
-//
-//			if (table.getRowCount() == 0) {
-//				return false;
-//			}
-//
-//			HSSFFont fontRow = cell.getSheet().getWorkbook().createFont();
-//			fontRow.setBold(false);
-//
-//			CellStyle styleRow = worksheet.getWorkbook().createCellStyle();
-//			styleRow.setFont(fontRow);
-//			styleRow.setBorderBottom(BorderStyle.THIN);
-//			styleRow.setBorderTop(BorderStyle.THIN);
-//			styleRow.setBorderLeft(BorderStyle.THIN);
-//			styleRow.setBorderRight(BorderStyle.THIN);
-//
-//			// Ghi dữ liệu vào bảng
-//			int STT = 0;
-//			for (int i = 0; i < table.getRowCount(); i++) {
-//				row = worksheet.createRow(5 + i);
-//				for (int j = 0; j < header.length; j++) {
-//					cell = row.createCell(j + 1);
-//					if (STT == i) {
-//						cell.setCellValue(STT + 1);
-//						STT++;
-//					} else {
-//						if (table.getValueAt(i, j - 1) != null) {
-//							if (j == header.length - 3) {
-//								String luong[] = tableModel.getValueAt(i, j - 1).toString().split(",");
-//								String tienLuong = "";
-//								for (int t = 0; t < luong.length; t++)
-//									tienLuong += luong[t];
-//								cell.setCellValue(Double.parseDouble(tienLuong));
-//							} else
-//								cell.setCellValue(table.getValueAt(i, j - 1).toString().trim());
-//						}
-//					}
-//					cell.setCellStyle(styleRow);
-//				}
-//			}
-//
-//			for (int i = 1; i < header.length + 1; i++) {
-//				worksheet.autoSizeColumn(i);
-//			}
-//
-//			workbook.write(fileOut);
-//			workbook.close();
-//			fileOut.flush();
-//			fileOut.close();
-//			return true;
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return false;
-//		}
-//	}
-//
-//	@Override
-//	public void mouseClicked(MouseEvent e) {
-//	}
-//
-//	@Override
-//	public void mousePressed(MouseEvent e) {
-//		int r = table.getSelectedRow();
-//		if (e.getClickCount() == 2 && r != -1) {
-//			if(tableModel.getValueAt(r, 10).toString().trim().equals("Đã nghỉ việc")) {
-//				JOptionPane.showMessageDialog(this, "Nhân viên đã nghỉ việc nên không được cập nhật!", "Lỗi",
-//						JOptionPane.ERROR_MESSAGE);
-//				return;
-//			}
-//			new FormCapNhatNV().setVisible(true);
-//		}
-//	}
-//
-//	@Override
-//	public void mouseReleased(MouseEvent e) {
-//	}
-//
-//	@Override
-//	public void mouseEntered(MouseEvent e) {
-//	}
-//
-//	@Override
-//	public void mouseExited(MouseEvent e) {
-//	}
 
 }

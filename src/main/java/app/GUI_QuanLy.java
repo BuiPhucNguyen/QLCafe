@@ -40,6 +40,8 @@ public class GUI_QuanLy extends JFrame implements ActionListener, MouseListener 
 		setIconImage(icon.getImage());
 		UIManager.put("TabbedPane.selected", new Color(194, 148, 108));
 		UIManager.put("TabbedPane.contentAreaColor", new Color(248, 227, 182));
+		UIManager.put("TabbedPane.shadow",new Color(248, 227, 182));
+		UIManager.put("TabbedPane.background",new Color(248, 227, 182));
 		add(createTabbedPane());
 	}
 
@@ -63,7 +65,7 @@ public class GUI_QuanLy extends JFrame implements ActionListener, MouseListener 
 		tabbedPane.setForeground(Color.WHITE);
 		tabbedPane.setFont(new Font("Tahoma", Font.BOLD, 13));
 		
-		FrameKhachHang frameKH = new FrameKhachHang();
+//		FrameKhachHang frameKH = new FrameKhachHang();
 		FrameNhanVien frameNV = new FrameNhanVien();
 		FrameBan framePH = new FrameBan();
 		FrameDichVu frameDV = new FrameDichVu();
@@ -80,12 +82,12 @@ public class GUI_QuanLy extends JFrame implements ActionListener, MouseListener 
 		tabThongKe.setForeground(Color.WHITE);
 		tabThongKe.setFont(new Font("Tahoma", Font.BOLD, 13));
 		FrameThongKeDoanhThu frameTKDT = new FrameThongKeDoanhThu();
-		FrameThongKeKhachHang frameTKKH = new FrameThongKeKhachHang();
+		FrameThongKeDichVu frameTKKH = new FrameThongKeDichVu();
 		JPanel pnlTKKhachHang = frameTKKH.createPanelKhachHang();
 		JPanel pnlTKDoanhThu = frameTKDT.createPanelDoanhThu();
 		
 		tabThongKe.addTab("THỐNG KÊ DOANH THU", new ImageIcon("image/doanhthu.png"), pnlTKDoanhThu, "THỐNG KÊ DOANH THU");
-		tabThongKe.addTab("THỐNG KÊ SỐ LẦN KHÁCH ĐẾN", new ImageIcon("image/khachhang.png"), pnlTKKhachHang, "THỐNG KÊ SỐ LẦN KHÁCH ĐẾN");
+		tabThongKe.addTab("THỐNG KÊ DỊCH VỤ", new ImageIcon("image/khachhang.png"), pnlTKKhachHang, "THỐNG KÊ SỐ LẦN KHÁCH ĐẾN");
 		
 		/* add tab with JPanel */
 		

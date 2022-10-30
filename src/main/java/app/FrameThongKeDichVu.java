@@ -13,15 +13,15 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.FileOutputStream;
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -37,11 +37,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
@@ -62,13 +60,12 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import com.toedter.calendar.JDateChooser;
 
 
-public class FrameThongKeDoanhThu extends JFrame  {
+public class FrameThongKeDichVu extends JFrame {
 	private JComboBox<String> cmbTieuChi;
 	private JButton btnTimKiem;
 	private JButton btnLamMoi;
 	private DefaultTableModel tableModel;
 	private JTable table;
-	private JTextField txtDoanhThu;
 	private JRadioButton radHomNay;
 	private JRadioButton radMotTuan;
 	private JRadioButton radMotThang;
@@ -76,14 +73,12 @@ public class FrameThongKeDoanhThu extends JFrame  {
 	private JRadioButton radTangDan;
 	private JRadioButton radGiamDan;
 	private JButton btnXuatExcel;
-	private JButton btnHoaDon;
-	private JButton btnDVDaBan;
-	private JDateChooser txtNgayMin;
-	private JDateChooser txtNgayMax;
-	private JComboBox<String> cmbMaHD;
+	private JButton btnSoLanDenQuan;
+	private JComboBox<String> cmbMaKH;
+	private JDateChooser dateNgayMin;
+	private JDateChooser dateNgayMax;
 
-
-	public JPanel createPanelDoanhThu() {
+	public JPanel createPanelKhachHang() {
 		
 		Toolkit toolkit = this.getToolkit(); /* Lấy độ phân giải màn hình */
 		Dimension d = toolkit.getScreenSize();
@@ -93,21 +88,14 @@ public class FrameThongKeDoanhThu extends JFrame  {
 		pnlContentPane.setLayout(null);
 		setContentPane(pnlContentPane);
 		// Chức năng
-//		btnHoaDon = new JButton("XEM HÓA ĐƠN", new ImageIcon("image/hoadon.png"));
-//		btnHoaDon.setBounds((int) (d.getWidth() - 850), 15, 190, 45);
-//		btnHoaDon.setFont(new Font("Tahoma", Font.BOLD, 15));
-//		btnHoaDon.setBackground(new Color(131, 77, 30));
-//		btnHoaDon.setForeground(Color.WHITE);
-//		btnHoaDon.setFocusPainted(false);
-//		pnlContentPane.add(btnHoaDon);
-//
-//		btnDVDaBan = new JButton("DỊCH VỤ ĐÃ BÁN", new ImageIcon("image/dichvu.png"));
-//		btnDVDaBan.setBounds((int) (d.getWidth() - 650), 15, 240, 45);
-//		btnDVDaBan.setFont(new Font("Tahoma", Font.BOLD, 15));
-//		btnDVDaBan.setBackground(new Color(131, 77, 30));
-//		btnDVDaBan.setForeground(Color.WHITE);
-//		btnDVDaBan.setFocusPainted(false);
-//		pnlContentPane.add(btnDVDaBan);
+//		btnSoLanDenQuan = new JButton("XEM SỐ LẦN ĐẾN QUÁN", new ImageIcon("image/thongtin.png"));
+//		btnSoLanDenQuan.setBounds((int) (d.getWidth() - 670), 15, 260, 45);
+//		btnSoLanDenQuan.setFont(new Font("Tahoma", Font.BOLD, 15));
+//		btnSoLanDenQuan.setBackground(new Color(79, 173, 84));
+//		btnSoLanDenQuan.setForeground(Color.WHITE);
+//		btnSoLanDenQuan.setFocusPainted(false);
+//		pnlContentPane.add(btnSoLanDenQuan);
+
 
 		btnXuatExcel = new JButton("XUẤT EXCEL", new ImageIcon("image/xuatexcel.png"));
 		btnXuatExcel.setFont(new Font("Tahoma", Font.BOLD, 15));
@@ -116,9 +104,7 @@ public class FrameThongKeDoanhThu extends JFrame  {
 		btnXuatExcel.setBounds((int) (d.getWidth() - 400), 15, 165, 45);
 		btnXuatExcel.setFocusPainted(false);
 		pnlContentPane.add(btnXuatExcel);
-		/*
-		 * Lọc
-		 */
+		// Tìm kiếm
 		JPanel pnlTimKiem = new JPanel();
 		pnlTimKiem.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), ""));
 		pnlTimKiem.setBounds(20, 15, 195, (int) (d.getHeight() - 149));
@@ -165,48 +151,50 @@ public class FrameThongKeDoanhThu extends JFrame  {
 		lblNgayMin.setBounds(30, 175, 120, 30);
 		lblNgayMin.setFont(new Font("Arial", Font.PLAIN, 15));
 		pnlTimKiem.add(lblNgayMin);
-		txtNgayMin = new JDateChooser();
-		txtNgayMin.setDateFormatString("yyyy-MM-dd");
-		txtNgayMin.setBounds(75, 175, 100, 30);
-		txtNgayMin.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		pnlTimKiem.add(txtNgayMin);
+		dateNgayMin = new JDateChooser();
+		dateNgayMin.setDateFormatString("yyyy-MM-dd");
+		dateNgayMin.setBounds(75, 175, 100, 30);
+		dateNgayMin.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		pnlTimKiem.add(dateNgayMin);
 
 		JLabel lblNgayMax = new JLabel("Đến: ");
 		lblNgayMax.setBounds(30, 215, 120, 30);
 		lblNgayMax.setFont(new Font("Arial", Font.PLAIN, 15));
 		pnlTimKiem.add(lblNgayMax);
-		txtNgayMax = new JDateChooser();
-		txtNgayMax.setDateFormatString("yyyy-MM-dd");
-		txtNgayMax.setBounds(75, 215, 100, 30);
-		txtNgayMax.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		pnlTimKiem.add(txtNgayMax);
+		dateNgayMax = new JDateChooser();
+		dateNgayMax.setDateFormatString("yyyy-MM-dd");
+		dateNgayMax.setBounds(75, 215, 100, 30);
+		dateNgayMax.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		pnlTimKiem.add(dateNgayMax);
 
-		JLabel lblMaHD = new JLabel("MÃ HÓA ĐƠN:", SwingConstants.CENTER);
-		lblMaHD.setOpaque(true);
-		lblMaHD.setBackground(new Color(173, 119, 72));
-		lblMaHD.setBounds(1, 265, 193, 30);
-		lblMaHD.setForeground(Color.WHITE);
-		lblMaHD.setFont(new Font("Arial", Font.BOLD, 15));
-		pnlTimKiem.add(lblMaHD);
-		cmbMaHD = new JComboBox<String>();
-		cmbMaHD.setBounds(12, 310, 170, 30);
-		cmbMaHD.setBackground(Color.WHITE);
-		cmbMaHD.setEditable(true);
-		cmbMaHD.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		AutoCompleteDecorator.decorate(cmbMaHD);
-		pnlTimKiem.add(cmbMaHD);
-		cmbMaHD.setMaximumRowCount(1);
+		JLabel lblMaKH = new JLabel("MÃ ĐỒ UỐNG:", SwingConstants.CENTER);
+		lblMaKH.setOpaque(true);
+		lblMaKH.setBackground(new Color(173, 119, 72));
+		lblMaKH.setBounds(1, 265, 193, 30);
+		lblMaKH.setForeground(Color.WHITE);
+		lblMaKH.setFont(new Font("Arial", Font.BOLD, 15));
+		pnlTimKiem.add(lblMaKH);
+		cmbMaKH = new JComboBox<String>();
+		cmbMaKH.setBounds(12, 310, 170, 30);
+		cmbMaKH.setBackground(Color.WHITE);
+		cmbMaKH.setEditable(true);
+		cmbMaKH.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		AutoCompleteDecorator.decorate(cmbMaKH);
+		pnlTimKiem.add(cmbMaKH);
+		cmbMaKH.setMaximumRowCount(1);
 
-		JLabel lblSX = new JLabel("SẮP XẾP THEO:", SwingConstants.CENTER);
+		JLabel lblSX = new JLabel("<html><div style='text-align: center;'>SẮP XẾP THEO: </div></html>",
+				SwingConstants.CENTER);
 		lblSX.setOpaque(true);
 		lblSX.setBackground(new Color(173, 119, 72));
 		lblSX.setBounds(1, 355, 193, 30);
 		lblSX.setForeground(Color.WHITE);
 		lblSX.setFont(new Font("Arial", Font.BOLD, 15));
 		pnlTimKiem.add(lblSX);
-		String[] loai = { "Mã hóa đơn", "Tổng số tiền thanh toán"};
+		String[] loai = { "Mã đồ uống", "Tên đồ uống", "Số lượng bán" };
 		cmbTieuChi = new JComboBox<String>(loai);
 		cmbTieuChi.setBounds(12, 400, 170, 30);
+		cmbTieuChi.setBackground(Color.WHITE);
 		cmbTieuChi.setFocusable(false);
 		cmbTieuChi.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		pnlTimKiem.add(cmbTieuChi);
@@ -247,13 +235,13 @@ public class FrameThongKeDoanhThu extends JFrame  {
 		 */
 		JPanel pnlDanhSach = new JPanel();
 		pnlDanhSach.setBorder(
-				BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "DANH SÁCH HÓA ĐƠN: "));
-		pnlDanhSach.setBounds(230, 75, (int) (d.getWidth() - 455), (int) (d.getHeight() - 250));
+				BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), "DANH SÁCH KHÁCH HÀNG: "));
+		pnlDanhSach.setBounds(230, 75, (int) (d.getWidth() - 455), (int) (d.getHeight() - 205));
 		pnlDanhSach.setBackground(Color.WHITE);
 		pnlDanhSach.setLayout(new GridLayout(1, 0, 0, 0));
 		pnlContentPane.add(pnlDanhSach);
 
-		String[] header = { "Mã hóa đơn", "Tên nhân viên", "Tên bàn", "Thanh toán" };
+		String[] header = { "Mã đồ uống", "Tên đồ uống", "Số lượng bán" };
 		tableModel = new DefaultTableModel(header, 0);
 		table = new JTable(tableModel) {
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
@@ -282,29 +270,9 @@ public class FrameThongKeDoanhThu extends JFrame  {
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
 
 
-
-		/*
-		 * Tổng doanh thu
-		 */
-		JLabel lblTongDT = new JLabel("<html>TỔNG DOANH THU: </html>");
-		lblTongDT.setFont(new Font("Times New Roman", Font.BOLD, 25));
-		lblTongDT.setBounds(600, (int) (d.getHeight() - 170), 500, 50);
-		pnlContentPane.add(lblTongDT);
-		txtDoanhThu = new JTextField("0.0 VNĐ");
-		txtDoanhThu.setFont(new Font("Times New Roman", Font.BOLD, 25));
-		txtDoanhThu.setBounds(850, (int) (d.getHeight() - 170), 400, 50);
-		txtDoanhThu.setEditable(false);
-		txtDoanhThu.setBorder(BorderFactory.createEmptyBorder());
-		txtDoanhThu.setBackground(new Color(248, 227, 182));
-		pnlContentPane.add(txtDoanhThu);
-
-
-
-		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
-		rightRenderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
-		table.getColumn("Thanh toán").setCellRenderer(rightRenderer);
 		table.setDefaultEditor(Object.class, null);
 		table.getTableHeader().setReorderingAllowed(false);
+		cmbMaKH.setSelectedIndex(-1);
 
 		return pnlContentPane;
 	}
