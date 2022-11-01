@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.FileOutputStream;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -55,6 +56,10 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import com.toedter.calendar.JDateChooser;
 
+import dao.DAO_NhanVien;
+import dao.impl.DAOImpl_NhanVien;
+import entity.NhanVien;
+
 
 public class FrameNhanVien extends JFrame {
 	private static JComboBox<String> cmbChucVu;
@@ -75,8 +80,9 @@ public class FrameNhanVien extends JFrame {
 	private static JCheckBox chkDaNghiViec;
 	private static JDateChooser txtNgaySinh;
 	private static String actor;
+	private static DAOImpl_NhanVien dao_NhanVien;
 
-	public JPanel createPanelNhanVien() {
+	public JPanel createPanelNhanVien() throws RemoteException {
 		
 		Toolkit toolkit = this.getToolkit(); /* Lấy độ phân giải màn hình */
 		Dimension d = toolkit.getScreenSize();
@@ -211,7 +217,7 @@ public class FrameNhanVien extends JFrame {
 		pnlTimKiem.add(cmbCmnd);
 		cmbCmnd.setMaximumRowCount(3);
 
-		JLabel lblNoiLamViec = new JLabel("<html><div style='text-align: center;'>NƠI LÀM VIỆC: </div></html>",
+		JLabel lblNoiLamViec = new JLabel("<html><div style='text-align: center;'>CHỨC VỤ: </div></html>",
 				SwingConstants.CENTER);
 		lblNoiLamViec.setOpaque(true);
 		lblNoiLamViec.setBackground(new Color(173, 119, 72));
@@ -220,46 +226,22 @@ public class FrameNhanVien extends JFrame {
 		lblNoiLamViec.setFont(new Font("Arial", Font.BOLD, 15));
 		pnlTimKiem.add(lblNoiLamViec);
 
-		JLabel lblCa = new JLabel("Ca: ");
-		lblCa.setBounds(10, 500, 150, 30);
-		lblCa.setFont(new Font("Arial", Font.PLAIN, 15));
-		pnlTimKiem.add(lblCa);
-		String[] ca = { "Tất cả", "8:00AM-4:00PM", "4:00PM-12:00AM", "12:00AM-8:00AM" };
-		cmbCa = new JComboBox<String>(ca);
-		cmbCa.setBounds(55, 500, 135, 30);
-		cmbCa.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		cmbCa.setFocusable(false);
-		pnlTimKiem.add(cmbCa);
-
 		JLabel lblChucvu = new JLabel("Chức vụ:  ");
-		lblChucvu.setBounds(10, 540, 150, 30);
+		lblChucvu.setBounds(10, 500, 150, 30);
 		lblChucvu.setFont(new Font("Arial", Font.PLAIN, 15));
 		;
 		pnlTimKiem.add(lblChucvu);
-		String[] chucVu = { "Tất cả", "Phục vụ", "Lễ tân" };
+		String[] chucVu = { "Tất cả", "Quản lý", "Nhân viên" };
 		cmbChucVu = new JComboBox<String>(chucVu);
-		cmbChucVu.setBounds(90, 540, 100, 30);
+		cmbChucVu.setBounds(90, 500, 100, 30);
 		cmbChucVu.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		cmbChucVu.setFocusable(false);
 		pnlTimKiem.add(cmbChucVu);
 
-		chkDangLam = new JCheckBox("Đang làm");
-		chkDangLam.setBounds(10, 580, 85, 30);
-		chkDangLam.setFont(new Font("Arial", Font.ITALIC, 13));
-		chkDangLam.setBackground(Color.WHITE);
-		chkDangLam.setSelected(true);
-		pnlTimKiem.add(chkDangLam);
-		chkDaNghiViec = new JCheckBox("Đã nghỉ việc");
-		chkDaNghiViec.setBounds(97, 580, 97, 30);
-		chkDaNghiViec.setFont(new Font("Arial", Font.ITALIC, 13));
-		chkDaNghiViec.setSelected(true);
-		chkDaNghiViec.setBackground(Color.WHITE);
-		pnlTimKiem.add(chkDaNghiViec);
-
 		btnTimKiem = new JButton("TÌM KIẾM", new ImageIcon("image/timkiem.png"));
 		btnTimKiem.setFont(new Font("Tahoma", Font.BOLD, 15));
 		btnTimKiem.setBackground(new Color(131, 77, 30));
-		btnTimKiem.setBounds(17, 630, 170, 45);
+		btnTimKiem.setBounds(17, 550, 170, 45);
 		btnTimKiem.setForeground(Color.WHITE);
 		btnTimKiem.setFocusPainted(false);
 		pnlTimKiem.add(btnTimKiem);
@@ -267,7 +249,7 @@ public class FrameNhanVien extends JFrame {
 		btnLamMoi = new JButton("LÀM MỚI", new ImageIcon("image/lammoi.png"));
 		btnLamMoi.setFont(new Font("Tahoma", Font.BOLD, 15));
 		btnLamMoi.setBackground(new Color(131, 77, 30));
-		btnLamMoi.setBounds(17, 690, 170, 45);
+		btnLamMoi.setBounds(17, 610, 170, 45);
 		btnLamMoi.setForeground(Color.WHITE);
 		btnLamMoi.setFocusPainted(false);
 		pnlTimKiem.add(btnLamMoi);
@@ -283,7 +265,7 @@ public class FrameNhanVien extends JFrame {
 		pnlDanhSach.setLayout(new GridLayout(1, 0, 0, 0));
 		pnlContentPane.add(pnlDanhSach);
 
-		String[] header = { "Mã nhân viên", "Tên nhân viên", "Ngày sinh", "Giới tính", "CMND/CCCD", "SĐT", "Chức vụ", "Lương", "Tài khoản", "Trạng thái" };
+		String[] header = { "Mã nhân viên", "Tên nhân viên", "Ngày sinh", "Giới tính", "CMND/CCCD", "SĐT", "Chức vụ", "Lương", "Tài khoản" };
 		tableModel = new DefaultTableModel(header, 0);
 		table = new JTable(tableModel) {
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
@@ -319,8 +301,268 @@ public class FrameNhanVien extends JFrame {
 
 		table.setDefaultEditor(Object.class, null);
 		table.getTableHeader().setReorderingAllowed(false);
+		
+		btnThem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				new FormThemNV().setVisible(true);
+			}
+		});
+		btnCapNhat.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				int r = table.getSelectedRow();
+				if (r == -1) {
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên cần cập nhật!", "Lỗi",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				} else {
+					new FormCapNhatNV().setVisible(true);
+				}
+			}	
+		});
+		btnXoa.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				int r = table.getSelectedRow();
+				if (r == -1) {
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên cho nghỉ việc!", "Lỗi",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				if (JOptionPane.showConfirmDialog(null, "Bạn có chắc sẽ cho nhân viên này nghỉ việc không?",
+						"Cảnh báo", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)==JOptionPane.YES_OPTION) {
+					try {
+						String maNV = tableModel.getValueAt(r, 0).toString();
+						dao_NhanVien = new DAOImpl_NhanVien();
+						if (dao_NhanVien.xoaNhanVien(maNV)) {
+							JOptionPane.showMessageDialog(null, "Xóa thành công!");
+						}
+						xoaHetDL();
+						docDuLieuDatabaseVaoTable();
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						JOptionPane.showMessageDialog(null, "Xóa không thành công!");
+						e1.printStackTrace();
+					}
+					
+				}
+			}
+		});
+		
+		btnLamMoi.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				try {
+					lamMoiDL();
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		btnTimKiem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String maNV = cmbMaNV.getSelectedItem().toString().trim();
+				String tenNV = cmbTenNV.getSelectedItem().toString().trim();
+				String sdt = cmbSdt.getSelectedItem().toString().trim();
+				Date ngaySinh = txtNgaySinh.getDate();
+				String cmnd = cmbCmnd.getSelectedItem().toString().trim();
+				String chucVu = cmbChucVu.getSelectedItem().toString().trim();
+				
+				xoaHetDL();
+				List<NhanVien> listNV = new ArrayList<NhanVien>();
+				try {
+					dao_NhanVien = new DAOImpl_NhanVien();
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				listNV = dao_NhanVien.getAllNhanVien();
+				if (!maNV.trim().equals("")) {
+					List<NhanVien> listTemp = new ArrayList<NhanVien>();
+					for (NhanVien nv : listNV) {
+						listTemp.add(nv);
+					}
+					listNV.clear();
+					for (NhanVien nv : listTemp) {
+						if (nv.getMaNV().trim().contains(maNV)) {
+							listNV.add(nv);
+						}
+					}
+				}
+				if (!tenNV.trim().equals("")) {
+					List<NhanVien> listTemp = new ArrayList<NhanVien>();
+					for (NhanVien nv : listNV) {
+						listTemp.add(nv);
+					}
+					listNV.clear();
+					for (NhanVien nv : listTemp) {
+						if (nv.getTenNV().trim().contains(tenNV)) {
+							listNV.add(nv);
+						}
+					}
+				}
+				if (!sdt.trim().equals("")) {
+					List<NhanVien> listTemp = new ArrayList<NhanVien>();
+					for (NhanVien nv : listNV) {
+						listTemp.add(nv);
+					}
+					listNV.clear();
+					for (NhanVien nv : listTemp) {
+						if (nv.getSdt().trim().contains(sdt)) {
+							listNV.add(nv);
+						}
+					}
+				}
+				SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+				if (ngaySinh != null) {
+					List<NhanVien> listTemp = new ArrayList<NhanVien>();
+					for (NhanVien nv : listNV) {
+						listTemp.add(nv);
+					}
+					listNV.clear();
+					for (NhanVien nv : listTemp) {
+						if (df.format(nv.getNgaySinh()).equals(df.format(ngaySinh))) {
+							listNV.add(nv);
+						}
+					}
+				}
+				if (!cmnd.trim().equals("")) {
+					List<NhanVien> listTemp = new ArrayList<NhanVien>();
+					for (NhanVien nv : listNV) {
+						listTemp.add(nv);
+					}
+					listNV.clear();
+					for (NhanVien nv : listTemp) {
+						if (nv.getCmnd().trim().contains(cmnd)) {
+							listNV.add(nv);
+						}
+					}
+				}
+				if (!chucVu.trim().equals("Tất cả")) {
+					List<NhanVien> listTemp = new ArrayList<NhanVien>();
+					for (NhanVien nv : listNV) {
+						listTemp.add(nv);
+					}
+					listNV.clear();
+					for (NhanVien nv : listTemp) {
+						if (nv.getChucVu().trim().equalsIgnoreCase(chucVu)) {
+							listNV.add(nv);
+						}
+					}
+				}
 
+				if (listNV.size() == 0) {
+					JOptionPane.showMessageDialog(null, "Không có nhân viên nào phù hợp với tiêu chí", "Lỗi",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				DecimalFormat dfMoney = new DecimalFormat("#,##0.0");
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				for (NhanVien nv : listNV) {
+					tableModel.addRow(new Object[] { nv.getMaNV().trim(), nv.getTenNV().trim(), sdf.format(nv.getNgaySinh()),
+							nv.isGioiTinh() == true ? "Nam" : "Nữ", nv.getCmnd().trim(), nv.getSdt().trim(),
+							nv.getChucVu().trim(), dfMoney.format(nv.getLuong()),
+							nv.getTaiKhoan().getTenTaiKhoan().getMaNV()});
+				}
+			}
+		});
+		
+		docDuLieuDatabaseVaoTable();
+		docDuLieuVaoCmbCmnd();
+		docDuLieuVaoCmbMaNV();
+		docDuLieuVaoCmbSdt();
+		docDuLieuVaoCmbTenNV();
 		return pnlContentPane;
 	}
+	
+	public static void lamMoiDL() throws RemoteException {
+		cmbChucVu.setSelectedIndex(0);
+		cmbTenNV.setSelectedIndex(0);
+		cmbMaNV.setSelectedIndex(0);
+		cmbCmnd.setSelectedIndex(0);
+		cmbSdt.setSelectedIndex(0);
+		txtNgaySinh.setDate(null);
 
+		xoaHetDL();
+		docDuLieuDatabaseVaoTable();
+	}
+	
+	public static void xoaHetDL() {
+		DefaultTableModel dm = (DefaultTableModel) table.getModel();
+		dm.setRowCount(0);
+	}
+	
+	public static void docDuLieuDatabaseVaoTable() throws RemoteException {
+		List<NhanVien> listNV = new ArrayList<NhanVien>();
+		dao_NhanVien = new DAOImpl_NhanVien();
+		
+		listNV = dao_NhanVien.getAllNhanVien();
+		DecimalFormat df = new DecimalFormat("#,##0.0");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		for (NhanVien nv : listNV) {
+			tableModel.addRow(new Object[] { nv.getMaNV().trim(), nv.getTenNV().trim(), sdf.format(nv.getNgaySinh()),
+					nv.isGioiTinh() == true ? "Nam" : "Nữ", nv.getCmnd().trim(), nv.getSdt().trim(),
+					nv.getChucVu().trim(), df.format(nv.getLuong()),
+					nv.getTaiKhoan().getTenTaiKhoan().getMaNV()});
+		}
+	}
+	
+	public static void docDuLieuVaoCmbTenNV() throws RemoteException {
+		List<NhanVien> listNV = new ArrayList<NhanVien>();
+		dao_NhanVien = new DAOImpl_NhanVien();
+		
+		listNV = dao_NhanVien.getAllNhanVien();
+		cmbTenNV.addItem("");
+		for (NhanVien nv : listNV) {
+			cmbTenNV.addItem(nv.getTenNV().trim());
+		}
+	}
+
+	public static void docDuLieuVaoCmbMaNV() throws RemoteException {
+		List<NhanVien> listNV = new ArrayList<NhanVien>();
+		dao_NhanVien = new DAOImpl_NhanVien();
+		
+		listNV = dao_NhanVien.getAllNhanVien();
+		cmbMaNV.addItem("");
+		for (NhanVien nv : listNV) {
+			cmbMaNV.addItem(nv.getMaNV().trim());
+		}
+	}
+
+	public static void docDuLieuVaoCmbCmnd() throws RemoteException {
+		List<NhanVien> listNV = new ArrayList<NhanVien>();
+		dao_NhanVien = new DAOImpl_NhanVien();
+		
+		listNV = dao_NhanVien.getAllNhanVien();
+		cmbCmnd.addItem("");
+		for (NhanVien nv : listNV) {
+			cmbCmnd.addItem(nv.getCmnd().trim());
+		}
+	}
+
+	public static void docDuLieuVaoCmbSdt() throws RemoteException {
+		List<NhanVien> listNV = new ArrayList<NhanVien>();
+		dao_NhanVien = new DAOImpl_NhanVien();
+		
+		listNV = dao_NhanVien.getAllNhanVien();
+		cmbSdt.addItem("");
+		for (NhanVien nv : listNV) {
+			cmbSdt.addItem(nv.getSdt().trim());
+		}
+	}
+	
 }

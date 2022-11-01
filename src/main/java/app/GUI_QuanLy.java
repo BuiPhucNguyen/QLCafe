@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.rmi.RemoteException;
 import java.text.ParseException;
 
 import javax.swing.BorderFactory;
@@ -28,7 +29,7 @@ public class GUI_QuanLy extends JFrame implements ActionListener, MouseListener 
 	private JLabel lblDoiMK;
 	private JLabel lblDangXuat;
 
-	public GUI_QuanLy() throws ParseException {
+	public GUI_QuanLy() throws ParseException, RemoteException {
 		setTitle("CAFE DIAMOND");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 //		setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -48,8 +49,9 @@ public class GUI_QuanLy extends JFrame implements ActionListener, MouseListener 
 	/**
 	 * create a JTabbedPane contain tabs
 	 * @throws ParseException 
+	 * @throws RemoteException 
 	 */
-	private JTabbedPane createTabbedPane() throws ParseException {
+	private JTabbedPane createTabbedPane() throws ParseException, RemoteException {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
 		tabbedPane.setUI(new BasicTabbedPaneUI() {
 			@Override
@@ -241,7 +243,7 @@ public class GUI_QuanLy extends JFrame implements ActionListener, MouseListener 
 	public void mouseExited(MouseEvent e) {
 	}
 	
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) throws ParseException, RemoteException {
 		new GUI_QuanLy().setVisible(true);
 	}
 }
