@@ -40,7 +40,7 @@ public class FrameThanhToan extends JFrame  {
 
 	public static JTable tableChonPhong;
 	private static DefaultTableModel tableModelChonPhong;
-	private JTextField txtTenPhong;
+	private JTextField txtTenBan;
 	private JTextField txtLoaiPhong;
 	private JTextField txtGiaPhong;
 	private JTextField txtTienDV;
@@ -182,11 +182,11 @@ public class FrameThanhToan extends JFrame  {
 		lblTenPhong.setBounds(15, 82, 150, 25);
 		lblTenPhong.setFont(new Font("Arial", Font.BOLD, 13));
 		pnThongTinHoaDon.add(lblTenPhong);
-		txtTenPhong = new JTextField();
-		txtTenPhong.setEditable(false);
-		txtTenPhong.setBounds(145, 80, 150, 30);
-		txtTenPhong.setFont(new Font("Times New Roman", Font.BOLD, 13));
-		pnThongTinHoaDon.add(txtTenPhong);
+		txtTenBan = new JTextField();
+		txtTenBan.setEditable(false);
+		txtTenBan.setBounds(145, 80, 150, 30);
+		txtTenBan.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		pnThongTinHoaDon.add(txtTenBan);
 
 		JLabel lblTienPhong = new JLabel("TIỀN DỊCH VỤ:");
 		lblTienPhong.setBounds(15, 127, 150, 25);

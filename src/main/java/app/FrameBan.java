@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.FileOutputStream;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -58,6 +59,10 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
+import dao.DAO_Ban;
+import dao.impl.DAOImpl_Ban;
+import entity.Ban;
+
 public class FrameBan extends JFrame  {
 	private JButton btnThem;
 	private JButton btnXoa;
@@ -68,6 +73,7 @@ public class FrameBan extends JFrame  {
 	private JButton btnTimKiem;
 	public static JComboBox<String> cmbMaPhong;
 	public static JComboBox<String> cmbTenPhong;
+	private static DAOImpl_Ban dao_Ban;
 	private JTextField txtGiaMin;
 	private JTextField txtGiaMax;
 	private JComboBox<String> cmbLoaiPhong;
@@ -78,7 +84,7 @@ public class FrameBan extends JFrame  {
 	private JRadioButton radGiamDan;
 
 
-	public JPanel createPanelPhongHat() throws ParseException {
+	public JPanel createPanelPhongHat() throws ParseException, RemoteException {
 		
 		Toolkit toolkit = this.getToolkit(); /* Lấy độ phân giải màn hình */
 		Dimension d = toolkit.getScreenSize();
@@ -265,8 +271,241 @@ public class FrameBan extends JFrame  {
 
 		table.setDefaultEditor(Object.class, null);
 		table.getTableHeader().setReorderingAllowed(false);
+		
+		btnThem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				new FormThemBan().setVisible(true);
+			}
+		});
+		
+		btnXoa.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				int r = table.getSelectedRow();
+				if (r == -1) {
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn bàn cần xóa!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				if (tableModel.getValueAt(r, 2).toString().trim().equals("Đã đặt")) {
+					JOptionPane.showMessageDialog(null, "Không được xóa bàn này vì có người đang sử dụng phòng!", "Lỗi",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				int result = JOptionPane.showConfirmDialog(null, "Bạn có chắc sẽ xóa dòng này không?", "Cảnh báo",
+						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+				if (result == 0) {
+					String maBan = tableModel.getValueAt(r, 0).toString();
+					try {
+						dao_Ban = new DAOImpl_Ban();
+						dao_Ban.xoaBan(maBan);
+						tableModel.removeRow(r);
+						JOptionPane.showMessageDialog(null, "Xóa thành công!");
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						JOptionPane.showMessageDialog(null, "Xóa không thành công!");
+						e1.printStackTrace();
+					}
+					
+				}
+			}
+		});
+		
+		btnCapNhat.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				int r = table.getSelectedRow();
+				
+				if (r == -1) {
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn bàn cần cập nhật!", "Lỗi",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				} else if(tableModel.getValueAt(r, 2).toString().trim().equals("Đã đặt")) {
+					JOptionPane.showMessageDialog(null, "Không được xóa bàn này vì có người đang sử dụng phòng!", "Lỗi",
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				} else {
+					try {
+						new FormCapNhatBan().setVisible(true);
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		
+		btnLamMoi.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				cmbTenPhong.setSelectedIndex(0);
+				cmbMaPhong.setSelectedIndex(0);
+				cmbTieuChi.setSelectedIndex(0);
+				radTangDan.setSelected(true);
+				xoaHetDL();
+				try {
+					docDuLieuDatabaseVaoTable();
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		btnTimKiem.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String maPhong = cmbMaPhong.getSelectedItem().toString().trim();
+				String tenPhong = cmbTenPhong.getSelectedItem().toString().trim();
+				
+				String trangThai = cmbTrangThai.getSelectedItem().toString().trim();
+	
+				int tieuChi = cmbTieuChi.getSelectedIndex();
+				boolean tangDan = radTangDan.isSelected();
+				
+					xoaHetDL();
+					List<Ban> list;
+					try {
+						list = dao_Ban.getAllBan();
+						if (!maPhong.trim().equals("")) {
+							List<Ban> listTemp = new ArrayList<Ban>();
+							for (Ban ph : list) {
+								listTemp.add(ph);
+							}
+							list.clear();
+							for (Ban ph : listTemp) {
+								if (ph.getMaBan().trim().contains(maPhong)) {
+									list.add(ph);
+								}
+							}
+						}
+						if (!tenPhong.trim().equals("")) {
+							List<Ban> listTemp = new ArrayList<Ban>();
+							for (Ban ph : list) {
+								listTemp.add(ph);
+							}
+							list.clear();
+							for (Ban ph : listTemp) {
+								if (ph.getTenBan().trim().contains(tenPhong)) {
+									list.add(ph);
+								}
+							}
+						}
+					
+						if (!trangThai.trim().equals("Tất cả")) {
+							boolean xnTrangThai;
+							if (trangThai.equalsIgnoreCase("Đã đặt"))
+								xnTrangThai = true;
+							else
+								xnTrangThai = false;
+							List<Ban> listTemp = new ArrayList<Ban>();
+							for (Ban ph : list) {
+								listTemp.add(ph);
+							}
+							list.clear();
+							for (Ban ph : listTemp) {
+								if (ph.isTrangThai() == xnTrangThai) {
+									list.add(ph);
+								}
+							}
+						}
+						
+						if(list.size() == 0) {
+							JOptionPane.showMessageDialog(null, "Không có phòng hát nào phù hợp với tiêu chí", "Lỗi",
+									JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+						if(tieuChi == 0)
+							sapXepTheoMaPH(list, tangDan);
+						else if(tieuChi == 1)
+							sapXepTheoTenPH(list, tangDan);
+						
+						for (Ban ph : list) {
+							tableModel.addRow(new Object[] { ph.getMaBan(), ph.getTenBan(), ph.isTrangThai() == false ? "Trống" : "Đã đặt" });
+						}
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}	
+				}
+		});
+		
+		docDuLieuDatabaseVaoTable();
+		docDuLieuVaoCmbMaBan();
+		docDuLieuVaoCmbTenBan();
 		return pnlContentPane;
 	}
 
+	public static void xoaHetDL() {
+		DefaultTableModel dm = (DefaultTableModel) table.getModel();
+		dm.setRowCount(0);
+	}
 
+	public static void docDuLieuDatabaseVaoTable() throws RemoteException {
+		dao_Ban = new DAOImpl_Ban();
+		List<Ban> list = dao_Ban.getAllBan();
+		DecimalFormat df = new DecimalFormat("#,##0.0");
+		for (Ban b : list) {
+			tableModel.addRow(new Object[] { b.getMaBan(), b.getTenBan(), b.isTrangThai() == false ? "Trống" : "Đã đặt" });
+		}
+	}
+	
+	public static void docDuLieuVaoCmbTenBan() throws RemoteException {
+		dao_Ban = new DAOImpl_Ban();
+		List<Ban> list = dao_Ban.getAllBan();
+		cmbTenPhong.addItem("");
+		for (Ban b : list) {
+			cmbTenPhong.addItem(b.getTenBan());
+		}
+	}
+	public static void docDuLieuVaoCmbMaBan() throws RemoteException {
+		dao_Ban = new DAOImpl_Ban();
+		List<Ban> list = dao_Ban.getAllBan();
+		cmbMaPhong.addItem("");
+		for (Ban b : list) {
+			cmbMaPhong.addItem(b.getMaBan());
+		}
+	}
+	public void sapXepTheoMaPH(List<Ban> list, boolean tangDan) {
+		Collections.sort(list, new Comparator<Ban>() {
+			@Override
+			public int compare(Ban o1, Ban o2) {
+				if (tangDan) {
+					if (o1 != null && o2 != null)
+						return o1.getMaBan().compareToIgnoreCase(o2.getMaBan());
+					return 0;
+				} else {
+					if (o1 != null && o2 != null)
+						return o2.getMaBan().compareToIgnoreCase(o1.getMaBan());
+					return 0;
+				}
+			}
+		});
+	}
+	public void sapXepTheoTenPH(List<Ban> list, boolean tangDan) {
+		Collections.sort(list, new Comparator<Ban>() {
+			@Override
+			public int compare(Ban o1, Ban o2) {
+				if (tangDan) {
+					if (o1 != null && o2 != null)
+						return o1.getTenBan().compareToIgnoreCase(o2.getTenBan());
+					return 0;
+				} else {
+					if (o1 != null && o2 != null)
+						return o2.getTenBan().compareToIgnoreCase(o1.getTenBan());
+					return 0;
+				}
+			}
+		});
+	}
 }
