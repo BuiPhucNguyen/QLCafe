@@ -44,9 +44,9 @@ public class GUI_NhanVien extends JFrame implements ActionListener, MouseListene
 		add(createTabbedPane());
 	}
 	
-	public static void main(String[] args) {
-		new GUI_NhanVien().setVisible(true);
-	}
+//	public static void main(String[] args) {
+//		new GUI_NhanVien().setVisible(true);
+//	}
 
 	/**
 	 * create a JTabbedPane contain tabs
@@ -129,14 +129,14 @@ public class GUI_NhanVien extends JFrame implements ActionListener, MouseListene
 		lblDoiMK.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		lblDoiMK.setFont(new Font("Tahoma", Font.ITALIC, 15));
 		lblDoiMK.setForeground(new Color(131, 77, 30));
-		lblDoiMK.setBounds((int) d.getWidth() - 100 - 200 - 120, 0, 110, 42);
+		lblDoiMK.setBounds((int) d.getWidth() - 100 - 200 - 120 - 10, 0, 110, 42);
 		lblBackground.add(lblDoiMK);
 
 		lblDangXuat = new JLabel("<HTML><U>ĐĂNG XUẤT</U></HTML>");
 		lblDangXuat.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		lblDangXuat.setFont(new Font("Tahoma", Font.ITALIC, 15));
 		lblDangXuat.setForeground(new Color(131, 77, 30));
-		lblDangXuat.setBounds((int) d.getWidth() - 100 - 200, 0, 150, 42);
+		lblDangXuat.setBounds((int) d.getWidth() - 100 - 200 - 10, 0, 150, 42);
 		lblBackground.add(lblDangXuat);
 
 		/*

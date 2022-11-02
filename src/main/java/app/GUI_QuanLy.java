@@ -147,14 +147,14 @@ public class GUI_QuanLy extends JFrame implements ActionListener, MouseListener 
 		lblDoiMK.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		lblDoiMK.setFont(new Font("Tahoma", Font.ITALIC, 15));
 		lblDoiMK.setForeground(new Color(131, 77, 30));
-		lblDoiMK.setBounds((int) d.getWidth() - 100 - 200 - 120, 0, 110, 42);
+		lblDoiMK.setBounds((int) d.getWidth() - 100 - 200 - 120 - 10, 0, 110, 42);
 		lblBackground.add(lblDoiMK);
 
 		lblDangXuat = new JLabel("<HTML><U>ĐĂNG XUẤT</U></HTML>");
 		lblDangXuat.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		lblDangXuat.setFont(new Font("Tahoma", Font.ITALIC, 15));
 		lblDangXuat.setForeground(new Color(131, 77, 30));
-		lblDangXuat.setBounds((int) d.getWidth() - 100 - 200, 0, 150, 42);
+		lblDangXuat.setBounds((int) d.getWidth() - 100 - 200 - 10, 0, 150, 42);
 		lblBackground.add(lblDangXuat);
 
 		/*
@@ -243,7 +243,7 @@ public class GUI_QuanLy extends JFrame implements ActionListener, MouseListener 
 	public void mouseExited(MouseEvent e) {
 	}
 	
-	public static void main(String[] args) throws ParseException, RemoteException {
-		new GUI_QuanLy().setVisible(true);
-	}
+//	public static void main(String[] args) throws ParseException, RemoteException {
+//		new GUI_QuanLy().setVisible(true);
+//	}
 }

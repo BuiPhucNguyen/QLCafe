@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
@@ -23,29 +24,22 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-//import connectDB.ConnectDB;
-//import dao.TaiKhoan_DAO;
-//import entity.TaiKhoan;
+import dao.DAO_TaiKhoan;
+import dao.impl.DAOImpl_TaiKhoan;
+import entity.TaiKhoan;
 
-public class FrameDangNhap extends JFrame  {
+public class FrameDangNhap extends JFrame implements KeyListener, MouseListener {
 	private static JTextField txtTaiKhoan;
 	private JPasswordField txtMatKhau;
 	private JButton btnDangNhap;
-//	private TaiKhoan_DAO taikhoan_dao;
-
+	public static TaiKhoan taiKhoanHienTai = null;
 	public FrameDangNhap() {
-		// khởi tạo kết nối đến CSDL
-//		try {
-//			ConnectDB.getInstance().connect();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		taikhoan_dao = new TaiKhoan_DAO();
-		// ---------------------------
+		
 		setTitle("ĐĂNG NHẬP");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setSize(290, 320);
 		setLocationRelativeTo(null);
+		setResizable(false);
 		ImageIcon icon = new ImageIcon("image/logodark.png");
 		setIconImage(icon.getImage());
 
@@ -104,106 +98,131 @@ public class FrameDangNhap extends JFrame  {
 		lblQuenMatKhau.setBounds(95, 230, 135, 43);
 		pnlContentPane.add(lblQuenMatKhau);
 
-//		txtTaiKhoan.addKeyListener(this);
-//		txtMatKhau.addKeyListener(this);
-//		btnDangNhap.addActionListener(this);
-//		lblQuenMatKhau.addMouseListener(this);
+		txtTaiKhoan.addKeyListener(this);
+		txtMatKhau.addKeyListener(this);
+		lblQuenMatKhau.addMouseListener(this);
+		btnDangNhap.addActionListener(new ActionListener() {
+			
+			private DAOImpl_TaiKhoan dao_TaiKhoan;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String taikhoan = txtTaiKhoan.getText();
+				String matkhau = txtMatKhau.getText();
+
+				int flag = 0;
+				
+				try {
+					dao_TaiKhoan = new DAOImpl_TaiKhoan();
+					List<TaiKhoan> listTK = dao_TaiKhoan.getAllTaiKhoan();
+					for (TaiKhoan tk : listTK) {
+						if (tk.getTenTaiKhoan().getMaNV().trim().equals(taikhoan) && tk.getMatKhau().trim().equals(matkhau)) {
+							flag = 1;
+							taiKhoanHienTai = tk;
+							break;
+						}
+					}
+					if (flag == 0) {
+						JOptionPane.showMessageDialog(null, "Đăng nhập thất bại!!!", "Lỗi",
+								JOptionPane.ERROR_MESSAGE);
+						txtTaiKhoan.requestFocus();
+						return;
+					} else {
+						if (taikhoan.substring(0, 2).equals("NV")) {
+							GUI_NhanVien guiNV = new GUI_NhanVien();
+							guiNV.setVisible(true);
+							guiNV.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+							guiNV.setLocationRelativeTo(null);
+//							guiNV.setExtendedState(JFrame.MAXIMIZED_BOTH);
+							dispose();
+						}
+						if (taikhoan.substring(0, 2).equals("QL")) {
+							GUI_QuanLy guiQL;
+							try {
+								guiQL = new GUI_QuanLy();
+								guiQL.setVisible(true);
+								guiQL.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+								guiQL.setLocationRelativeTo(null);
+//								guiQL.setExtendedState(JFrame.MAXIMIZED_BOTH);
+								dispose();
+							} catch (ParseException e1) {
+								e1.printStackTrace();
+							}
+
+						}
+					}
+				} catch (RemoteException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+				
+				
+			}
+		});
+		
 	}
 
 	public static void main(String[] args) {
 		new FrameDangNhap().setVisible(true);
 	}
+	
+	public static TaiKhoan getTaiKhoan() {
+		return taiKhoanHienTai;
+	}
 
-//	@SuppressWarnings("deprecation")
-//	@Override
-//	public void actionPerformed(ActionEvent e) {
-//		Object o = e.getSource();
-//		if (o.equals(btnDangNhap)) {
-//			String taikhoan = txtTaiKhoan.getText();
-//			String matkhau = txtMatKhau.getText();
-//
-//			int flag = 0;
-//			List<TaiKhoan> listTK = taikhoan_dao.getalltbTaiKhoan();
-//			for (TaiKhoan tk : listTK) {
-//				if (tk.getTenTaiKhoan().trim().equals(taikhoan) && tk.getMatKhau().trim().equals(matkhau)) {
-//					flag = 1;
-//					break;
-//				}
-//			}
-//			if (flag == 0) {
-//				JOptionPane.showMessageDialog(this, "Đăng nhập thất bại!!!", "Lỗi",
-//						JOptionPane.ERROR_MESSAGE);
-//				txtTaiKhoan.requestFocus();
-//				return;
-//			} else {
-//				if (taikhoan.substring(0, 2).equals("LT")) {
-//					GUI_NhanVien guiNV = new GUI_NhanVien();
-//					guiNV.setVisible(true);
-//					guiNV.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-//					guiNV.setLocationRelativeTo(null);
-//					guiNV.setExtendedState(JFrame.MAXIMIZED_BOTH);
-//					dispose();
-//				}
-//				if (taikhoan.substring(0, 2).equals("QL") || taikhoan.substring(0, 2).equals("CQ")) {
-//					GUI_QuanLy guiQL;
-//					try {
-//						guiQL = new GUI_QuanLy();
-//						guiQL.setVisible(true);
-//						guiQL.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-//						guiQL.setLocationRelativeTo(null);
-//						guiQL.setExtendedState(JFrame.MAXIMIZED_BOTH);
-//						dispose();
-//					} catch (ParseException e1) {
-//						e1.printStackTrace();
-//					}
-//
-//				}
-//			}
-//		}
-//	}
-//
-//	public static String getTaiKhoan() {
-//		return txtTaiKhoan.getText();
-//	}
-//
-//	@Override
-//	public void keyTyped(KeyEvent e) {
-//	}
-//
-//	@Override
-//	public void keyPressed(KeyEvent e) {
-//		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-//			btnDangNhap.doClick();
-//		}
-//	}
-//
-//	@Override
-//	public void keyReleased(KeyEvent e) {
-//	}
-//
-//	@Override
-//	public void mouseClicked(MouseEvent e) {
-//		FrameXacNhanTaiKhoan frameXN = new FrameXacNhanTaiKhoan();
-//		frameXN.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-//		frameXN.setVisible(true);
-//		frameXN.setLocationRelativeTo(null);
-//		dispose();
-//	}
-//
-//	@Override
-//	public void mouseEntered(MouseEvent e) {
-//	}
-//
-//	@Override
-//	public void mouseExited(MouseEvent e) {
-//	}
-//
-//	@Override
-//	public void mousePressed(MouseEvent e) {
-//	}
-//
-//	@Override
-//	public void mouseReleased(MouseEvent e) {
-//	}
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			btnDangNhap.doClick();
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		FrameXacNhanTaiKhoan frameXN = new FrameXacNhanTaiKhoan();
+		frameXN.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		frameXN.setVisible(true);
+		frameXN.setLocationRelativeTo(null);
+		dispose();
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 
 }

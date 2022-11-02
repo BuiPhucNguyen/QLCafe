@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.rmi.RemoteException;
 import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
@@ -15,30 +18,18 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 
-//import connectDB.ConnectDB;
-//import dao.DoiMatKhau_DAO;
-//import dao.TaiKhoan_DAO;
-//import entity.TaiKhoan;
+import dao.DAO_TaiKhoan;
+import dao.impl.DAOImpl_TaiKhoan;
+import entity.TaiKhoan;
 
-public class FrameDoiMatKhau extends JFrame {
+public class FrameDoiMatKhau extends JFrame implements KeyListener{
 
 	private JPasswordField txtMatkhauCu;
 	private JPasswordField txtMatkhauMoi;
 	private JPasswordField txtXacNhan;
 	private JButton btnDoiMatKhau;
-//	private DoiMatKhau_DAO doimatkhau_dao;
-//	private TaiKhoan_DAO taiKhoan_dao;
 
 	public FrameDoiMatKhau() {
-		// khởi tạo kết nối đến CSDL
-//		try {
-//			ConnectDB.getInstance().connect();
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		doimatkhau_dao = new DoiMatKhau_DAO();
-//		taiKhoan_dao = new TaiKhoan_DAO();
-		// ------------------------------
 
 		setTitle("ĐỔI MẬT KHẨU");
 		setSize(400, 220);
@@ -48,7 +39,7 @@ public class FrameDoiMatKhau extends JFrame {
 		setIconImage(icon.getImage());
 
 		JPanel pnlContentPane = new JPanel(null);
-		pnlContentPane.setBackground(new Color(248, 227, 182));
+		pnlContentPane.setBackground(new Color(252, 242, 217));
 		setContentPane(pnlContentPane);
 
 		txtMatkhauCu = new JPasswordField();
@@ -65,19 +56,19 @@ public class FrameDoiMatKhau extends JFrame {
 
 		JLabel lblMKcu = new JLabel("MẬT KHẨU CŨ:");
 		lblMKcu.setBounds(30, 20, 120, 20);
-		lblMKcu.setForeground(new Color(131, 77, 30));
+		lblMKcu.setForeground(Color.BLACK);
 		lblMKcu.setFont(new Font("Arial", Font.BOLD, 13));
 		pnlContentPane.add(lblMKcu);
 
 		JLabel lblMKmoi = new JLabel("MẬT KHẨU MỚI:");
 		lblMKmoi.setBounds(30, 55, 120, 20);
-		lblMKmoi.setForeground(new Color(131, 77, 30));
+		lblMKmoi.setForeground(Color.BLACK);
 		lblMKmoi.setFont(new Font("Arial", Font.BOLD, 13));
 		pnlContentPane.add(lblMKmoi);
 
 		JLabel lblXn = new JLabel("XÁC NHẬN:");
 		lblXn.setBounds(30, 90, 120, 20);
-		lblXn.setForeground(new Color(131, 77, 30));
+		lblXn.setForeground(Color.BLACK);
 		lblXn.setFont(new Font("Arial", Font.BOLD, 13));
 		pnlContentPane.add(lblXn);
 
@@ -91,61 +82,93 @@ public class FrameDoiMatKhau extends JFrame {
 
 		pnlContentPane.add(btnDoiMatKhau);
 
-//		btnDoiMatKhau.addActionListener(this);
+		txtMatkhauCu.addKeyListener(this);
+		txtMatkhauMoi.addKeyListener(this);
+		txtXacNhan.addKeyListener(this);
+		btnDoiMatKhau.addActionListener(new ActionListener() {
+
+			private DAOImpl_TaiKhoan dao_TaiKhoan;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String matKhauCu = txtMatkhauCu.getText().trim();
+				String matKhauMoi = txtMatkhauMoi.getText().trim();
+				String xacNhan = txtXacNhan.getText().trim();
+
+				
+				if (!ktraMatKhau())
+					return;
+				else {
+					try {
+						TaiKhoan tk = FrameDangNhap.getTaiKhoan();
+						tk.setMatKhau(xacNhan);
+						dao_TaiKhoan = new DAOImpl_TaiKhoan();
+						if (dao_TaiKhoan.capnhatTaiKhoan(tk) == true) {
+							JOptionPane.showMessageDialog(null, "Đổi mật khẩu thành công");
+							dispose();
+						} else {
+							JOptionPane.showMessageDialog(null, "Đổi mật khẩu thất bại");
+						}
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
 
 	}
 
-	public static void main(String[] args) {
-		new FrameDoiMatKhau().setVisible(true);
+//	public static void main(String[] args) {
+//		new FrameDoiMatKhau().setVisible(true);
+//	}
+
+	public boolean ktraMatKhau() {
+		String matKhauCu = txtMatkhauCu.getText().trim();
+		String matKhauMoi = txtMatkhauMoi.getText().trim();
+		String xacNhan = txtXacNhan.getText().trim();
+
+		if (matKhauCu.equals("") || matKhauMoi.equals("") || xacNhan.equals("")) {
+			JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ mật khẩu");
+			return false;
+		}
+
+		TaiKhoan tk = FrameDangNhap.getTaiKhoan();
+
+		if (!matKhauCu.equals(tk.getMatKhau().trim())) {
+			JOptionPane.showMessageDialog(this, "Mật khẩu cũ không chính xác");
+			return false;
+		}
+		if (matKhauMoi.matches("(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,20}")) {
+			if (!matKhauMoi.equals(xacNhan)) {
+				JOptionPane.showMessageDialog(this, "Xác nhận không chính xác");
+				return false;
+			}
+		} else {
+			JOptionPane.showMessageDialog(this, "Mật khẩu mới từ 8 đến 20 kí tự gồm cả chữ và số");
+			return false;
+		}
+		return true;
 	}
 
-//	@Override
-//	public void actionPerformed(ActionEvent e) {
-//		Object o = e.getSource();
-//		if (o.equals(btnDoiMatKhau)) {
-//			String matKhauCu = txtMatkhauCu.getText().trim();
-//			String matKhauMoi = txtMatkhauMoi.getText().trim();
-//			String xacNhan = txtXacNhan.getText().trim();
-//
-//			TaiKhoan tk = doimatkhau_dao.getTaiKhoanTheoTenTaiKhoan(FrameDangNhap.getTaiKhoan());
-//			if(!ktraMatKhau())
-//				return;
-//			else {
-//				if (taiKhoan_dao.updateDoiMatKhau(tk, matKhauMoi) == true) {
-//					JOptionPane.showMessageDialog(this, "Đổi mật khẩu thành công");
-//					dispose();
-//				} else {
-//					JOptionPane.showMessageDialog(this, "Đổi mật khẩu thất bại");
-//				}
-//			}
-//		}
-//	}
-//
-//	public boolean ktraMatKhau() {
-//		String matKhauCu = txtMatkhauCu.getText().trim();
-//		String matKhauMoi = txtMatkhauMoi.getText().trim();
-//		String xacNhan = txtXacNhan.getText().trim();
-//
-//		if (matKhauCu.equals("") || matKhauMoi.equals("") || xacNhan.equals("")) {
-//			JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ mật khẩu");
-//			return false;
-//		}
-//
-//		TaiKhoan tk = doimatkhau_dao.getTaiKhoanTheoTenTaiKhoan(FrameDangNhap.getTaiKhoan());
-//
-//		if (!matKhauCu.equals(tk.getMatKhau().trim())) {
-//			JOptionPane.showMessageDialog(this, "Mật khẩu cũ không chính xác");
-//			return false;
-//		}
-//		if (matKhauMoi.matches("(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,20}")) {
-//			if (!matKhauMoi.equals(xacNhan)) {
-//				JOptionPane.showMessageDialog(this, "Xác nhận không chính xác");
-//				return false;
-//			}
-//		} else {
-//			JOptionPane.showMessageDialog(this, "Mật khẩu mới từ 8 đến 20 kí tự gồm cả chữ và số");
-//			return false;
-//		}
-//		return true;
-//	}
+@Override
+public void keyTyped(KeyEvent e) {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public void keyPressed(KeyEvent e) {
+	// TODO Auto-generated method stub
+	if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+		btnDoiMatKhau.doClick();
+	}
+}
+
+@Override
+public void keyReleased(KeyEvent e) {
+	// TODO Auto-generated method stub
+	
+}
 }
