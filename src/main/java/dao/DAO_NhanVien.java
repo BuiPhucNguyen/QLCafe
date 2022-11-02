@@ -11,4 +11,5 @@ public interface DAO_NhanVien extends Remote {
 	public boolean xoaNhanVien(String id) throws RemoteException;
 	public boolean themNhanVien(NhanVien nv) throws RemoteException;
 	public boolean capnhatNhanVien(NhanVien nv) throws RemoteException;
+	public NhanVien getNhanVienTheoMa(String id) throws RemoteException;
 }

@@ -42,6 +42,25 @@ public class DAOImpl_NhanVien extends UnicastRemoteObject implements DAO_NhanVie
 	}
 	
 	@Override
+	public NhanVien getNhanVienTheoMa(String id) {
+		EntityTransaction tr = em.getTransaction();
+		NhanVien nv = null;
+		try {
+			tr.begin();
+
+			nv = (NhanVien) em.createNativeQuery("select * from NhanVien where maNV = '"+id+"'", NhanVien.class).getSingleResult();
+			
+			tr.commit();
+			return nv;
+		} catch (Exception e) {
+			e.printStackTrace();
+			tr.rollback();
+		}
+
+		return null;
+	}
+	
+	@Override
 	public boolean xoaNhanVien(String id) throws RemoteException {
 		EntityTransaction tr = em.getTransaction();
 		try {
