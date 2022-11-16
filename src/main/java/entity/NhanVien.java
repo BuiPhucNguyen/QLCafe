@@ -161,6 +161,4 @@ public class NhanVien implements Serializable {
 		this.maNV = maNV;
 	}
 
-	
-	
 }	

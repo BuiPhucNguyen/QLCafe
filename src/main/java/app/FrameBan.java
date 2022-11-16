@@ -491,7 +491,9 @@ public class FrameBan extends JFrame  {
 		List<Ban> list = dao_Ban.getAllBan();
 		DecimalFormat df = new DecimalFormat("#,##0.0");
 		for (Ban b : list) {
-			tableModel.addRow(new Object[] { b.getMaBan(), b.getTenBan(), b.isTrangThai() == false ? "Trống" : "Đã đặt" });
+			if (!b.getMaBan().equalsIgnoreCase("B9999")) {
+				tableModel.addRow(new Object[] { b.getMaBan(), b.getTenBan(), b.isTrangThai() == false ? "Trống" : "Đã đặt" });
+			}
 		}
 	}
 	

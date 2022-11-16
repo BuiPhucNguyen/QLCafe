@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.rmi.RemoteException;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -28,7 +29,7 @@ public class GUI_NhanVien extends JFrame implements ActionListener, MouseListene
 	private JComponent lblDoiMK;
 	private JLabel lblDangXuat;
 
-	public GUI_NhanVien() {
+	public GUI_NhanVien() throws RemoteException {
 		setTitle("CAFE DIAMOND");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setExtendedState(MAXIMIZED_BOTH);
@@ -50,8 +51,9 @@ public class GUI_NhanVien extends JFrame implements ActionListener, MouseListene
 
 	/**
 	 * create a JTabbedPane contain tabs
+	 * @throws RemoteException 
 	 */
-	private JTabbedPane createTabbedPane() {
+	private JTabbedPane createTabbedPane() throws RemoteException {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
 		tabbedPane.setUI(new BasicTabbedPaneUI() {
 			@Override

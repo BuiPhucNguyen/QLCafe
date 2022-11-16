@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.rmi.RemoteException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -113,6 +114,7 @@ public class FormThemNV extends JFrame implements KeyListener {
 
 		cmbChucVu.setBounds(385, 140, 150, 30);
 		cmbChucVu.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		cmbChucVu.setSelectedIndex(1);
 		pnlContentPane.add(cmbChucVu);
 
 		JLabel lblLuong = new JLabel("LƯƠNG: ");
@@ -143,6 +145,8 @@ public class FormThemNV extends JFrame implements KeyListener {
 
 			private DAOImpl_NhanVien dao_NhanVien;
 			private DAOImpl_TaiKhoan dao_TaiKhoan;
+			private List<NhanVien> listNV = new ArrayList<NhanVien>();
+			
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -150,30 +154,41 @@ public class FormThemNV extends JFrame implements KeyListener {
 				if (!validInput()) {
 					return;
 				} else {
-					String maNV;
+					String maNV = null;
+					String maNVCuoi = null;
 					try {
 						dao_NhanVien = new DAOImpl_NhanVien();
 					} catch (RemoteException e2) {
 						// TODO Auto-generated catch block
 						e2.printStackTrace();
 					}
-					List<NhanVien> listNV = dao_NhanVien.getAllNhanVien();
+					
 
 					String chucVu = cmbChucVu.getSelectedItem().toString();
-
-					if (chucVu.equals("Nhân viên")) {
+					
+					try {
+						
+						listNV = dao_NhanVien.getAllNhanVienTheoChucVụ(chucVu);
+						System.out.println(listNV.size());
+					} catch (Exception e2) {
+						// TODO: handle exception
+						e2.printStackTrace();
+					}
+					
+					if (chucVu.equalsIgnoreCase("Nhân viên")) {
 						if (listNV.size() == 0)
 							maNV = "NV1001";
 						else {
-							String maNVCuoi = listNV.get(listNV.size() - 1).getMaNV().trim();
+							maNVCuoi = listNV.get(listNV.size() - 1).getMaNV().trim();
 							int layMaSo = Integer.parseInt(maNVCuoi.substring(2, maNVCuoi.length()));
 							maNV = "NV" + (layMaSo + 1);
 						}
-					} else {
+					} 
+					if(chucVu.equalsIgnoreCase("Quản lý")){
 						if (listNV.size() == 0)
 							maNV = "QL1001";
 						else {
-							String maNVCuoi = listNV.get(listNV.size() - 1).getMaNV().trim();
+							maNVCuoi = listNV.get(listNV.size() - 1).getMaNV().trim();
 							int layMaSo = Integer.parseInt(maNVCuoi.substring(2, maNVCuoi.length()));
 							maNV = "QL" + (layMaSo + 1);
 						}

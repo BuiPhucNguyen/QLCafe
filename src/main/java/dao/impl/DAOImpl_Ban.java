@@ -90,4 +90,59 @@ public class DAOImpl_Ban extends UnicastRemoteObject implements DAO_Ban {
 		return false;
 	}
 
+	@Override
+	public List<Ban> getAllBanTrong() throws RemoteException {
+		// TODO Auto-generated method stub
+		EntityTransaction tr = em.getTransaction();
+		List<Ban> list = new ArrayList<Ban>();
+		try {
+			tr.begin();
+
+			list = em.createNativeQuery("select * from dbo.Ban where trangThai = 0", Ban.class).getResultList();
+			
+			tr.commit();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			tr.rollback();
+		}
+		return null;
+	}
+
+	@Override
+	public List<Ban> getAllBanDaDat() throws RemoteException {
+		EntityTransaction tr = em.getTransaction();
+		List<Ban> list = new ArrayList<Ban>();
+		try {
+			tr.begin();
+
+			list = em.createNativeQuery("select * from dbo.Ban where trangThai = 1", Ban.class).getResultList();
+			
+			tr.commit();
+			return list;
+		} catch (Exception e) {
+			e.printStackTrace();
+			tr.rollback();
+		}
+		return null;
+	}
+
+	@Override
+	public Ban getBanTheoTen(String ten) throws RemoteException {
+		EntityTransaction tr = em.getTransaction();
+		
+		try {
+			tr.begin();
+
+			Ban b = (Ban) em.createNativeQuery("select * from dbo.Ban where tenBan = N'"+ten+"'", Ban.class).getSingleResult();
+			
+			tr.commit();
+			return b;
+		} catch (Exception e) {
+			e.printStackTrace();
+			tr.rollback();
+		}
+		return null;
+	}
+
 }

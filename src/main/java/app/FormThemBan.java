@@ -75,10 +75,10 @@ public class FormThemBan extends JFrame implements KeyListener{
 							dao_Ban = new DAOImpl_Ban();
 							String maBan;
 							List<Ban> list = dao_Ban.getAllBan();
-							if (list.size() == 0)
+							if (list.size() == 1)
 								maBan = "B1001";
 							else {
-								String maPHCuoi = list.get(list.size() - 1).getMaBan().trim();
+								String maPHCuoi = list.get(list.size() - 2).getMaBan().trim();
 								int layMaSo = Integer.parseInt(maPHCuoi.substring(1, maPHCuoi.length()));
 								maBan = "B" + (layMaSo + 1);
 							}
