@@ -2,15 +2,11 @@ package app;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
-
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,7 +15,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 
-import dao.DAO_TaiKhoan;
 import dao.impl.DAOImpl_TaiKhoan;
 import entity.NhanVien;
 import entity.TaiKhoan;
@@ -31,9 +26,12 @@ public class FrameDatLaiMatKhau extends JFrame implements KeyListener{
 	private JButton btnDoiMatKhau;
 
 	private NhanVien nvDoiMatKhau;
+	private static DAOImpl_TaiKhoan dao_TaiKhoan;
 
-	public FrameDatLaiMatKhau(NhanVien nv) {
-
+	public FrameDatLaiMatKhau(NhanVien nv) throws RemoteException {
+		
+		dao_TaiKhoan = new DAOImpl_TaiKhoan();
+		
 		setTitle("ĐẶT LẠI MẬT KHẨU");
 		setSize(330, 210);
 		setLocationRelativeTo(null);
@@ -43,7 +41,12 @@ public class FrameDatLaiMatKhau extends JFrame implements KeyListener{
 
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent evt) {
-				new FrameDangNhap().setVisible(true);
+				try {
+					new FrameDangNhap().setVisible(true);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 
@@ -93,9 +96,7 @@ public class FrameDatLaiMatKhau extends JFrame implements KeyListener{
 				if (validInput()) {
 					TaiKhoan tk = nvDoiMatKhau.getTaiKhoan();
 					tk.setMatKhau(matKhauMoi);
-					DAO_TaiKhoan dao_TaiKhoan;
 					try {
-						dao_TaiKhoan = new DAOImpl_TaiKhoan();
 						if (dao_TaiKhoan.capnhatTaiKhoan(tk) == true) {
 							JOptionPane.showMessageDialog(null, "Đổi mật khẩu thành công");
 							new FrameDangNhap().setVisible(true);
@@ -113,7 +114,7 @@ public class FrameDatLaiMatKhau extends JFrame implements KeyListener{
 		});
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws RemoteException {
 		new FrameDatLaiMatKhau(new NhanVien()).setVisible(true);
 	}
 

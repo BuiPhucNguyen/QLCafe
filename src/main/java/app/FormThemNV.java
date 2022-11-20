@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,9 +21,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.toedter.calendar.JDateChooser;
-
-import dao.DAO_NhanVien;
-import dao.DAO_TaiKhoan;
 import dao.impl.DAOImpl_NhanVien;
 import dao.impl.DAOImpl_TaiKhoan;
 import entity.NhanVien;
@@ -36,13 +32,15 @@ public class FormThemNV extends JFrame implements KeyListener {
 	private JTextField txtCmnd;
 	private JTextField txtSdt;
 	private JComboBox<String> cmbChucVu;
-	private JComboBox<String> cmbCa;
 	private JTextField txtLuong;
 	private JButton btnThem;
-	private String actor;
 	private JDateChooser txtNgaySinh;
+	private static DAOImpl_NhanVien dao_NhanVien;
+	private static DAOImpl_TaiKhoan dao_TaiKhoan;
 
-	public FormThemNV() {
+	public FormThemNV() throws RemoteException {
+		dao_NhanVien = new DAOImpl_NhanVien();
+		dao_TaiKhoan = new DAOImpl_TaiKhoan();
 		// Xác định đăng nhập
 
 		setTitle("THÊM NHÂN VIÊN");
@@ -143,8 +141,6 @@ public class FormThemNV extends JFrame implements KeyListener {
 
 		btnThem.addActionListener(new ActionListener() {
 
-			private DAOImpl_NhanVien dao_NhanVien;
-			private DAOImpl_TaiKhoan dao_TaiKhoan;
 			private List<NhanVien> listNV = new ArrayList<NhanVien>();
 			
 
@@ -156,14 +152,7 @@ public class FormThemNV extends JFrame implements KeyListener {
 				} else {
 					String maNV = null;
 					String maNVCuoi = null;
-					try {
-						dao_NhanVien = new DAOImpl_NhanVien();
-					} catch (RemoteException e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
-					}
 					
-
 					String chucVu = cmbChucVu.getSelectedItem().toString();
 					
 					try {
@@ -208,8 +197,6 @@ public class FormThemNV extends JFrame implements KeyListener {
 					TaiKhoan tk = new TaiKhoan(nv, "123");
 
 					try {
-						dao_NhanVien = new DAOImpl_NhanVien();
-						dao_TaiKhoan = new DAOImpl_TaiKhoan();
 						dao_NhanVien.themNhanVien(nv);
 						dao_TaiKhoan.themTaiKhoan(tk);
 					} catch (RemoteException e1) {

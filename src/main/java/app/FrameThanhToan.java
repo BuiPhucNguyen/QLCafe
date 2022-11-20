@@ -10,9 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
+import java.rmi.RemoteException;
 import java.util.Date;
 import java.util.List;
 
@@ -35,32 +33,44 @@ import javax.swing.table.TableCellRenderer;
 
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
+import dao.impl.DAOImpl_Ban;
+import dao.impl.DAOImpl_CTHD;
+import dao.impl.DAOImpl_HoaDon;
+import dao.impl.DAOImpl_NhanVien;
+import entity.Ban;
+import entity.ChiTietHoaDon;
+import entity.HoaDon;
+import entity.NhanVien;
+
 
 public class FrameThanhToan extends JFrame  {
 
 	public static JTable tableChonPhong;
-	private static DefaultTableModel tableModelChonPhong;
 	private JTextField txtTenBan;
-	private JTextField txtLoaiPhong;
-	private JTextField txtGiaPhong;
 	private JTextField txtTienDV;
-	private JTextField txtSoGio;
 	private JTextField txtTienPhong;
 	private JTextField txtNhanVien;
-	private JLabel lblTongTienThanhToan;
 	private JButton btnThanhToan;
-	private JTextField txtThoiGianDen;
-	private JTextField txtThoiGianTra;
-	private Date thoiGianTraPhongDate;
 	public static JComboBox<String> cmbChonPhong;
-	private JLabel lblTenKH;
-	private JTextField txtKH;
 	private JButton btnTimPhong;
 	private JButton btnInHoaDon;
 	private JTextField txtThanhToan;
+	private JButton btnXemCTHD;
+	private JButton btnLamMoi;
+	private static DAOImpl_Ban dao_Ban;
+	private static DAOImpl_NhanVien dao_NV;
+	private static DAOImpl_HoaDon dao_HD;
+	private static DAOImpl_CTHD dao_CTHD;
+	public static DefaultTableModel tableModelChonBan;
+	public static JTable tableChonBan;
+	
 
-	public JPanel createPanelTraPhong() {
-
+	public JPanel createPanelTraPhong() throws RemoteException {
+		
+		dao_Ban = new DAOImpl_Ban();
+		dao_NV = new DAOImpl_NhanVien();
+		dao_HD = new DAOImpl_HoaDon();
+		dao_CTHD = new DAOImpl_CTHD();
 
 		setTitle("THANH TOÁN");
 		setSize(948, 440);
@@ -91,8 +101,8 @@ public class FrameThanhToan extends JFrame  {
 		pnlContentPane.add(pnlTraPhong);
 
 		String[] header = { "Mã bàn", "Tên bàn"};
-		tableModelChonPhong = new DefaultTableModel(header, 0);
-		tableChonPhong = new JTable(tableModelChonPhong) {
+		tableModelChonBan = new DefaultTableModel(header, 0);
+		tableChonBan = new JTable(tableModelChonBan) {
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
 				Component c = super.prepareRenderer(renderer, row, column);
 				Color color1 = new Color(220, 220, 220);
@@ -105,11 +115,11 @@ public class FrameThanhToan extends JFrame  {
 				return c;
 			}
 		};
-		tableChonPhong.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-		tableChonPhong.setGridColor(getBackground());
-		tableChonPhong.setRowHeight(tableChonPhong.getRowHeight() + 20);
-		tableChonPhong.setSelectionBackground(new Color(255, 255, 128));
-		JTableHeader tableHeader = tableChonPhong.getTableHeader();
+		tableChonBan.setFont(new Font("Times New Roman", Font.PLAIN, 15));
+		tableChonBan.setGridColor(getBackground());
+		tableChonBan.setRowHeight(tableChonBan.getRowHeight() + 20);
+		tableChonBan.setSelectionBackground(new Color(255, 255, 128));
+		JTableHeader tableHeader = tableChonBan.getTableHeader();
 		tableHeader.setBackground(new Color(173, 119, 72));
 		tableHeader.setForeground(new Color(255, 255, 255));
 		tableHeader.setFont(new Font("Arial", Font.BOLD, 15));
@@ -120,7 +130,7 @@ public class FrameThanhToan extends JFrame  {
 
 		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
 		rightRenderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
-		pnlTraPhong.add(new JScrollPane(tableChonPhong));
+		pnlTraPhong.add(new JScrollPane(tableChonBan));
 
 		// Chọn phòng
 		JPanel pnlChonPhong = new JPanel();
@@ -158,7 +168,6 @@ public class FrameThanhToan extends JFrame  {
 		JPanel pnThongTinHoaDon = new JPanel();
 		pnThongTinHoaDon.setLayout(null);
 
-//		pnThongTinHoaDon.setBounds(20, 125, 315, (int) (d.getHeight() - 205));
 
 		pnThongTinHoaDon.setBounds(20, 135, 315, (int) (d.getHeight() - 215));
 
@@ -174,7 +183,7 @@ public class FrameThanhToan extends JFrame  {
 		txtNhanVien = new JTextField();
 		txtNhanVien.setEditable(false);
 		txtNhanVien.setBounds(145, 35, 150, 30);
-		txtNhanVien.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		txtNhanVien.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		pnThongTinHoaDon.add(txtNhanVien);
 
 
@@ -185,7 +194,7 @@ public class FrameThanhToan extends JFrame  {
 		txtTenBan = new JTextField();
 		txtTenBan.setEditable(false);
 		txtTenBan.setBounds(145, 80, 150, 30);
-		txtTenBan.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		txtTenBan.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		pnThongTinHoaDon.add(txtTenBan);
 
 		JLabel lblTienPhong = new JLabel("TIỀN DỊCH VỤ:");
@@ -194,17 +203,17 @@ public class FrameThanhToan extends JFrame  {
 		pnThongTinHoaDon.add(lblTienPhong);
 		txtTienPhong = new JTextField();
 		txtTienPhong.setEditable(false);
-		txtTienPhong.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		txtTienPhong.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		txtTienPhong.setBounds(145, 125, 150, 30);
 		pnThongTinHoaDon.add(txtTienPhong);
 
-		JLabel lblTienDV = new JLabel("THUẾ:");
+		JLabel lblTienDV = new JLabel("PHỤ THU(8% VAT):");
 		lblTienDV.setFont(new Font("Arial", Font.BOLD, 13));
 		lblTienDV.setBounds(15, 172, 150, 25);
 		pnThongTinHoaDon.add(lblTienDV);
 		txtTienDV = new JTextField();
 		txtTienDV.setEditable(false);
-		txtTienDV.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		txtTienDV.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		txtTienDV.setBounds(145, 170, 150, 30);
 		pnThongTinHoaDon.add(txtTienDV);
 
@@ -214,12 +223,30 @@ public class FrameThanhToan extends JFrame  {
 		pnThongTinHoaDon.add(lblThanhToan);
 		txtThanhToan = new JTextField();
 		txtThanhToan.setEditable(false);
-		txtThanhToan.setFont(new Font("Times New Roman", Font.BOLD, 13));
+		txtThanhToan.setFont(new Font("Times New Roman", Font.BOLD, 15));
 		txtThanhToan.setBounds(145, 215, 150, 30);
 		pnThongTinHoaDon.add(txtThanhToan);
+		
+		btnXemCTHD = new JButton("XEM CTHD");
+		btnXemCTHD.setBounds(75, 270, 165, 40);
+		btnXemCTHD.setIcon(new ImageIcon("image/timkiem.png"));
+		btnXemCTHD.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnXemCTHD.setBackground(new Color(131, 77, 30));
+		btnXemCTHD.setForeground(Color.WHITE);
+		btnXemCTHD.setFocusPainted(false);
+		pnThongTinHoaDon.add(btnXemCTHD);
+		
+		btnLamMoi = new JButton("LÀM MỚI");
+		btnLamMoi.setBounds(75, 330, 165, 40);
+		btnLamMoi.setIcon(new ImageIcon("image/lammoi.png"));
+		btnLamMoi.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnLamMoi.setBackground(new Color(131, 77, 30));
+		btnLamMoi.setForeground(Color.WHITE);
+		btnLamMoi.setFocusPainted(false);
+		pnThongTinHoaDon.add(btnLamMoi);
 
 		btnInHoaDon = new JButton("IN HÓA ĐƠN");
-		btnInHoaDon.setBounds(75, 270, 165, 40);
+		btnInHoaDon.setBounds(75, 390, 165, 40);
 		btnInHoaDon.setIcon(new ImageIcon("image/inhoadon.png"));
 		btnInHoaDon.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnInHoaDon.setBackground(new Color(131, 77, 30));
@@ -228,7 +255,7 @@ public class FrameThanhToan extends JFrame  {
 		pnThongTinHoaDon.add(btnInHoaDon);
 
 		btnThanhToan = new JButton("THANH TOÁN");
-		btnThanhToan.setBounds(75, 330, 165, 40);
+		btnThanhToan.setBounds(75, 450, 165, 40);
 		btnThanhToan.setIcon(new ImageIcon("image/thanhtoan.png"));
 		btnThanhToan.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnThanhToan.setBackground(new Color(131, 77, 30));
@@ -236,10 +263,291 @@ public class FrameThanhToan extends JFrame  {
 		btnThanhToan.setFocusPainted(false);
 		pnThongTinHoaDon.add(btnThanhToan);
 
-		tableChonPhong.clearSelection();
-		tableChonPhong.setDefaultEditor(Object.class, null);
+		tableChonBan.clearSelection();
+		tableChonBan.setDefaultEditor(Object.class, null);
 
 		cmbChonPhong.setSelectedIndex(-1);
+		
+		docDuLieuDatabaseVaoTableBanDaDat();
+		docDLCmbBan();
+		
+		NhanVien nv_temp = FrameDangNhap.getTaiKhoan().getTenTaiKhoan();
+		NhanVien nv = dao_NV.getNhanVienTheoMa(nv_temp.getMaNV());
+		
+		txtNhanVien.setText(nv.getTenNV());
+		
+		tableChonBan.addMouseListener(new MouseListener() {
+			
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				int r = tableChonBan.getSelectedRow();
+				txtTenBan.setText(tableModelChonBan.getValueAt(r, 1).toString());
+				
+				try {
+					String maHD = "";
+					List<HoaDon> listhd = dao_HD.getHDChuaThanhToan();
+					for (HoaDon hd_temp : listhd) {
+						if (hd_temp.getMaBan().getTenBan().equalsIgnoreCase(tableModelChonBan.getValueAt(r, 1).toString())) {
+							maHD = hd_temp.getMaHD();
+							System.out.println(hd_temp.getNgayDat());
+						}
+					}
+					List<ChiTietHoaDon> list = dao_CTHD.getCTHDTheoMa(maHD);
+					double tong = 0;
+					for (ChiTietHoaDon ct : list) {
+						tong+=(ct.getSoLuong()*ct.getMaNuoc().getGiaTien());
+					}
+					txtTienPhong.setText(""+tong);
+					txtTienDV.setText(""+tong*8/100);
+					txtThanhToan.setText(""+(tong+tong*8/100));
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}	
+			}
+			
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		btnXemCTHD.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String tenBan = txtTenBan.getText().trim();
+				if (tenBan.equalsIgnoreCase("")) {
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn bàn cần xem chi tiết hõa đơn");
+				} else {
+					try {
+						new FormHienThiCTHD(tenBan).setVisible(true);
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		
+		btnLamMoi.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				txtTenBan.setText("");
+				txtTienPhong.setText("");
+				txtTienDV.setText("");
+				txtThanhToan.setText("");
+				
+				tableChonBan.clearSelection();
+				
+				cmbChonPhong.setSelectedIndex(0);
+			}
+		});
+		
+		btnTimPhong.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				String s = cmbChonPhong.getSelectedItem().toString();
+				if (s.equalsIgnoreCase("")) {
+					XoaDLTableBanDaDat();
+					try {
+						docDuLieuDatabaseVaoTableBanDaDat();
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				} else {
+					try {
+						XoaDLTableBanDaDat();
+						List<Ban> list = dao_Ban.getAllBanDaDat();
+						Ban ban = null;
+						for (Ban b : list) {
+							if (b.getTenBan().equalsIgnoreCase(s)) {
+								ban = b;
+								break;
+							}
+						}
+						if (ban!=null) {
+							tableModelChonBan.addRow(new Object[] { ban.getMaBan(), ban.getTenBan() });
+						} else {
+							try {
+								XoaDLTableBanDaDat();
+								docDuLieuDatabaseVaoTableBanDaDat();
+							} catch (Exception e2) {
+								// TODO: handle exception
+								e2.printStackTrace();
+							}
+							JOptionPane.showMessageDialog(null, "Không tìm thấy bàn!");
+							
+						}
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		
+		btnThanhToan.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				
+				try {
+					boolean tonTaiMangVe = false;
+					for (int i = 0; i < tableModelChonBan.getRowCount(); i++) {
+						if (tableModelChonBan.getValueAt(i, 0).toString().equalsIgnoreCase("B9999")) {
+							tonTaiMangVe=true;
+							break;
+						}
+					}
+					
+					if (tonTaiMangVe && !txtTenBan.getText().equalsIgnoreCase("Mua mang về")) {
+						JOptionPane.showMessageDialog(null, "Cần thanh toán Mua mang về trước!");
+					} else {
+						double thanhTien = Double.parseDouble(txtThanhToan.getText());
+						HoaDon hd = null;
+						List<HoaDon> listhd = dao_HD.getHDChuaThanhToan();
+						for (HoaDon hd_temp : listhd) {
+							if (hd_temp.getMaBan().getTenBan().equalsIgnoreCase(txtTenBan.getText())) {
+								hd = hd_temp;
+								break;
+							}
+						}
+						
+						if (dao_HD.thanhToan(hd.getMaHD(), thanhTien)) {
+							JOptionPane.showMessageDialog(null, "Thanh toán thành công!");
+							Ban b = hd.getMaBan();
+							b.setTrangThai(false);
+							dao_Ban.capnhatBan(b);
+							
+							txtTenBan.setText("");
+							txtTienPhong.setText("");
+							txtTienDV.setText("");
+							txtThanhToan.setText("");
+							
+							FrameDatBan.XoaDLTableHoaDon();
+							FrameDatBan.XoaDLTableBan();
+							FrameDatBan.docDuLieuDatabaseVaoTableBan();
+							FrameDatBan.XoaDLTableBanDaDat();
+							FrameDatBan.docDuLieuDatabaseVaoTableBanDaDat();
+							FrameDatBan.tableBanDaDat.clearSelection();
+							FrameDatBan.tableListDV.clearSelection();
+							FrameDatBan.tablePhongTrong.clearSelection();
+							FrameDatBan.tableHoaDonDV.clearSelection();
+							if (FrameDatBan.chkMangVe.isSelected()) {
+								FrameDatBan.chkMangVe.setSelected(false);
+							}
+							FrameDatBan.lblBanDangChon.setText("");
+							
+							DefaultTableModel dm = (DefaultTableModel) tableChonBan.getModel();
+							int rowCount = dm.getRowCount();
+							// Remove rows one by one from the end of the table
+							for (int i = rowCount - 1; i >= 0; i--) {
+								dm.removeRow(i);
+							}
+							FrameDatBan.tablePhongTrong.enable(true);
+							FrameDatBan.tableBanDaDat.enable(true);
+							FrameDatBan.txtSoLuong.setText("1");
+							
+							docDuLieuDatabaseVaoTableBanDaDat();
+							tableChonBan.clearSelection();
+							
+							cmbChonPhong.setSelectedIndex(0);
+						}
+					}
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+		});
+				
+		btnInHoaDon.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				int r = tableChonBan.getSelectedRow();
+				if (r == -1) {
+					JOptionPane.showMessageDialog(null, "Vui phòng chọn bàn cần in hóa đơn!");
+				} else {
+					String tenBan = tableModelChonBan.getValueAt(r, 1).toString();
+					String maHD = "";
+					Date date_temp = null;
+					try {
+						List<HoaDon> list = dao_HD.getHDChuaThanhToan();
+						for (HoaDon hd_temp : list) {
+							if (hd_temp.getMaBan().getTenBan().equalsIgnoreCase(tenBan)) {
+								maHD = hd_temp.getMaHD();
+								date_temp = hd_temp.getNgayDat();
+							}
+						}
+						
+						NhanVien nv_temp = FrameDangNhap.getTaiKhoan().getTenTaiKhoan();
+						NhanVien nv = dao_NV.getNhanVienTheoMa(nv_temp.getMaNV());
+						
+						new FrameHoaDonTinhTien(nv.getTenNV(), maHD, date_temp, tenBan).setVisible(true);
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}	
+				}
+			}
+		});
+		
 		return pnlContentPane;
+	}
+	
+	public static void docDuLieuDatabaseVaoTableBanDaDat() throws RemoteException {
+		List<Ban> list = dao_Ban.getAllBanDaDat();
+
+		for (Ban b : list) {
+//			if (!b.getMaBan().equalsIgnoreCase("B9999")) {
+				tableModelChonBan.addRow(new Object[] { b.getMaBan(), b.getTenBan() });
+//			}
+		}
+	}
+	public static void XoaDLTableBanDaDat() {
+		DefaultTableModel md = (DefaultTableModel) tableChonBan.getModel();
+		md.getDataVector().removeAllElements();
+	}
+	
+	public static void docDLCmbBan() throws RemoteException {
+		cmbChonPhong.removeAllItems();
+		cmbChonPhong.addItem("");
+
+		List<Ban> list = dao_Ban.getAllBanDaDat();
+		for (Ban b : list) {
+			cmbChonPhong.addItem(b.getTenBan());
+		}
 	}
 }

@@ -60,8 +60,6 @@ import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
-
-import dao.DAO_DichVu;
 import dao.DAO_NhanVien;
 import dao.impl.DAOImpl_DichVu;
 import dao.impl.DAOImpl_NhanVien;
@@ -692,7 +690,7 @@ public class FrameDichVu extends JFrame{
 	}
 
 	public static void docDuLieuVaoCmbTen() throws RemoteException {
-		
+		dao_DichVu = new DAOImpl_DichVu();
 		List<Nuoc> list = dao_DichVu.getAllDichVu();
 		cmbTenDV.addItem("");
 		for (Nuoc dv : list) {
@@ -701,6 +699,7 @@ public class FrameDichVu extends JFrame{
 	}
 
 	public static void docDuLieuVaoCmbMaDV() throws RemoteException {
+		dao_DichVu = new DAOImpl_DichVu();
 		List<Nuoc> list = dao_DichVu.getAllDichVu();
 		cmbMaDV.addItem("");
 		for (Nuoc dv : list) {
@@ -928,7 +927,6 @@ public class FrameDichVu extends JFrame{
 				xeDocTuFile.setMaNuoc("DV1001");
 			} else {
 				String maDV;
-				dao_DichVu = new DAOImpl_DichVu();
 				List<Nuoc> listN = dao_DichVu.getAllDichVu();
 				String maDVCuoi = dao_DichVu.getAllDichVu().get(listN.size()-1).getMaNuoc().trim();
 				System.out.println(maDVCuoi);

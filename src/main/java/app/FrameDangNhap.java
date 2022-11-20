@@ -32,8 +32,10 @@ public class FrameDangNhap extends JFrame implements KeyListener, MouseListener 
 	private static JTextField txtTaiKhoan;
 	private JPasswordField txtMatKhau;
 	private JButton btnDangNhap;
+	private static DAOImpl_TaiKhoan dao_TaiKhoan;
 	public static TaiKhoan taiKhoanHienTai = null;
-	public FrameDangNhap() {
+	public FrameDangNhap() throws RemoteException {
+		dao_TaiKhoan = new DAOImpl_TaiKhoan();
 		
 		setTitle("ĐĂNG NHẬP");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -102,9 +104,6 @@ public class FrameDangNhap extends JFrame implements KeyListener, MouseListener 
 		txtMatKhau.addKeyListener(this);
 		lblQuenMatKhau.addMouseListener(this);
 		btnDangNhap.addActionListener(new ActionListener() {
-			
-			private DAOImpl_TaiKhoan dao_TaiKhoan;
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -114,7 +113,6 @@ public class FrameDangNhap extends JFrame implements KeyListener, MouseListener 
 				int flag = 0;
 				
 				try {
-					dao_TaiKhoan = new DAOImpl_TaiKhoan();
 					List<TaiKhoan> listTK = dao_TaiKhoan.getAllTaiKhoan();
 					for (TaiKhoan tk : listTK) {
 						if (tk.getTenTaiKhoan().getMaNV().trim().equals(taikhoan) && tk.getMatKhau().trim().equals(matkhau)) {
@@ -163,7 +161,7 @@ public class FrameDangNhap extends JFrame implements KeyListener, MouseListener 
 		
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws RemoteException {
 		new FrameDangNhap().setVisible(true);
 	}
 	
@@ -194,11 +192,17 @@ public class FrameDangNhap extends JFrame implements KeyListener, MouseListener 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
-		FrameXacNhanTaiKhoan frameXN = new FrameXacNhanTaiKhoan();
-		frameXN.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-		frameXN.setVisible(true);
-		frameXN.setLocationRelativeTo(null);
-		dispose();
+		FrameXacNhanTaiKhoan frameXN;
+		try {
+			frameXN = new FrameXacNhanTaiKhoan();
+			frameXN.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+			frameXN.setVisible(true);
+			frameXN.setLocationRelativeTo(null);
+			dispose();
+		} catch (RemoteException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	@Override

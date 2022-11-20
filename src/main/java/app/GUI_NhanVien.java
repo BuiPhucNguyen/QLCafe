@@ -1,7 +1,6 @@
 package app;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -12,7 +11,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.rmi.RemoteException;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -25,11 +27,25 @@ import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 import javax.swing.plaf.basic.BasicTabbedPaneUI;
 
+import dao.impl.DAOImpl_Ban;
+import dao.impl.DAOImpl_CTHD;
+import dao.impl.DAOImpl_HoaDon;
+import entity.Ban;
+import entity.ChiTietHoaDon;
+import entity.HoaDon;
+
 public class GUI_NhanVien extends JFrame implements ActionListener, MouseListener {
 	private JComponent lblDoiMK;
 	private JLabel lblDangXuat;
+	private static DAOImpl_HoaDon dao_HD;
+	private static DAOImpl_CTHD dao_CTHD;
+	private static DAOImpl_Ban dao_Ban;
 
 	public GUI_NhanVien() throws RemoteException {
+		dao_HD = new DAOImpl_HoaDon();
+		dao_CTHD = new DAOImpl_CTHD();
+		dao_Ban = new DAOImpl_Ban();
+		
 		setTitle("CAFE DIAMOND");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setExtendedState(MAXIMIZED_BOTH);
@@ -84,6 +100,79 @@ public class GUI_NhanVien extends JFrame implements ActionListener, MouseListene
 		tabbedPane.addTab("ĐẶT BÀN", new ImageIcon("image/khachhang.png"), pnlDatPhong, "ĐẶT BÀN");
 		tabbedPane.addTab("THANH TOÁN", new ImageIcon("image/phonghat.png"), pnlTraPhong, "THANH TOÁN");
 //		tabbedPane.addTab("QUẢN LÝ KHÁCH HÀNG", new ImageIcon("image/khachhang.png"), pnlKhachHang, "QUẢN LÝ KHÁCH HÀNG");
+		
+this.addWindowListener(new WindowListener() {
+			
+			@Override
+			public void windowOpened(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowIconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				// TODO Auto-generated method stub
+				boolean tonTaiMangVe = false;
+				for (int i = 0; i < FrameThanhToan.tableModelChonBan.getRowCount(); i++) {
+					if (FrameThanhToan.tableModelChonBan.getValueAt(i, 0).toString().equalsIgnoreCase("B9999")) {
+						tonTaiMangVe=true;
+						break;
+					}
+				}
+				if (tonTaiMangVe) {
+					try {
+//						HoaDon hd = null;
+						List<HoaDon> listHD = dao_HD.getHDChuaThanhToan();
+						for (HoaDon hd_temp : listHD) {
+							if (hd_temp.getMaBan().getTenBan().equalsIgnoreCase("Mua mang về")) {
+//								hd = hd_temp;
+								List<ChiTietHoaDon> listCTHD = hd_temp.getNuocs();
+								for (ChiTietHoaDon ct : listCTHD) {
+									dao_CTHD.xoaCTHD(hd_temp.getMaHD(), ct.getMaNuoc().getMaNuoc());
+								}
+								dao_HD.xoaHD(hd_temp.getMaHD());
+							}
+						}
+						dao_Ban.capnhatBan(new Ban("B9999", "Mua mang về", false));
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+				}
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void windowActivated(WindowEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
 		return tabbedPane;
 	}
 
@@ -198,17 +287,29 @@ public class GUI_NhanVien extends JFrame implements ActionListener, MouseListene
 			int result = JOptionPane.showConfirmDialog(this, "Bạn có muốn đăng xuất không?", "?!",
 					JOptionPane.YES_NO_OPTION);
 			if (result == 0) {
-				FrameDangNhap frameDN = new FrameDangNhap();
-				frameDN.setVisible(true);
-				frameDN.setLocationRelativeTo(null);
-				dispose();
+				FrameDangNhap frameDN;
+				try {
+					frameDN = new FrameDangNhap();
+					frameDN.setVisible(true);
+					frameDN.setLocationRelativeTo(null);
+					dispose();
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		}
 		if (o.equals(lblDoiMK)) {
-			FrameDoiMatKhau frameDoiMK = new FrameDoiMatKhau();
-			frameDoiMK.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-			frameDoiMK.setVisible(true);
-			frameDoiMK.setLocationRelativeTo(null);
+			FrameDoiMatKhau frameDoiMK;
+			try {
+				frameDoiMK = new FrameDoiMatKhau();
+				frameDoiMK.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+				frameDoiMK.setVisible(true);
+				frameDoiMK.setLocationRelativeTo(null);
+			} catch (RemoteException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 

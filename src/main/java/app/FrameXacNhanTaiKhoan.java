@@ -2,16 +2,12 @@ package app;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.util.List;
-
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -19,21 +15,19 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
-import dao.DAO_NhanVien;
-import dao.DAO_TaiKhoan;
 import dao.impl.DAOImpl_NhanVien;
-import dao.impl.DAOImpl_TaiKhoan;
 import entity.NhanVien;
 
 public class FrameXacNhanTaiKhoan extends JFrame implements KeyListener{
 	private JTextField txtMaNV;
 	private JTextField txtCMND;
-	private JTextField txtTenTK;
 	private JButton btnXacNhan;
+	private static DAOImpl_NhanVien dao_NhanVien;
 	
 
-	public FrameXacNhanTaiKhoan() {
+	public FrameXacNhanTaiKhoan() throws RemoteException {
+		
+		dao_NhanVien = new DAOImpl_NhanVien();
 		
 		setTitle("XÁC NHẬN TÀI KHOẢN");
 		setSize(350, 180);
@@ -45,7 +39,12 @@ public class FrameXacNhanTaiKhoan extends JFrame implements KeyListener{
 
 		addWindowListener(new java.awt.event.WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent evt) {
-				new FrameDangNhap().setVisible(true);
+				try {
+					new FrameDangNhap().setVisible(true);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 		
@@ -89,8 +88,6 @@ public class FrameXacNhanTaiKhoan extends JFrame implements KeyListener{
 		txtCMND.addKeyListener(this);
 		btnXacNhan.addActionListener(new ActionListener() {
 			
-			private DAOImpl_TaiKhoan dao_TaiKhoan;
-			private DAOImpl_NhanVien dao_NhanVien;
 			private NhanVien nv;
 
 			@SuppressWarnings("unused")
@@ -107,7 +104,7 @@ public class FrameXacNhanTaiKhoan extends JFrame implements KeyListener{
 				
 				
 				try {
-					dao_NhanVien = new DAOImpl_NhanVien();
+
 					List<NhanVien> list = dao_NhanVien.getAllNhanVien();
 					for (NhanVien nhanVien : list) {
 						if (nhanVien.getTaiKhoan().getTenTaiKhoan().getMaNV().equals(maNV)) {

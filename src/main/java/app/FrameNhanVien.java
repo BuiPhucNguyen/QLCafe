@@ -9,11 +9,8 @@ import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.FileOutputStream;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,7 +20,6 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
@@ -56,15 +52,12 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import com.toedter.calendar.JDateChooser;
 
-import dao.DAO_NhanVien;
 import dao.impl.DAOImpl_NhanVien;
 import entity.NhanVien;
-import entity.TaiKhoan;
 
 
 public class FrameNhanVien extends JFrame {
 	private static JComboBox<String> cmbChucVu;
-	private static JComboBox<String> cmbCa;
 	private JButton btnThem;
 	private JButton btnXoa;
 	public static DefaultTableModel tableModel;
@@ -77,13 +70,11 @@ public class FrameNhanVien extends JFrame {
 	private JButton btnLamMoi;
 	private JButton btnCapNhat;
 	private JButton btnXuatExcel;
-	private static JCheckBox chkDangLam;
-	private static JCheckBox chkDaNghiViec;
 	private static JDateChooser txtNgaySinh;
-	private static String actor;
 	private static DAOImpl_NhanVien dao_NhanVien;
 
 	public JPanel createPanelNhanVien() throws RemoteException {
+		dao_NhanVien = new DAOImpl_NhanVien();
 		
 		Toolkit toolkit = this.getToolkit(); /* Lấy độ phân giải màn hình */
 		Dimension d = toolkit.getScreenSize();
@@ -308,7 +299,12 @@ public class FrameNhanVien extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				new FormThemNV().setVisible(true);
+				try {
+					new FormThemNV().setVisible(true);
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		btnCapNhat.addActionListener(new ActionListener() {
@@ -322,7 +318,12 @@ public class FrameNhanVien extends JFrame {
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				} else {
-					new FormCapNhatNV().setVisible(true);
+					try {
+						new FormCapNhatNV().setVisible(true);
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}	
 		});
@@ -341,7 +342,6 @@ public class FrameNhanVien extends JFrame {
 						"Cảnh báo", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)==JOptionPane.YES_OPTION) {
 					try {
 						String maNV = tableModel.getValueAt(r, 0).toString();
-						dao_NhanVien = new DAOImpl_NhanVien();
 						if (dao_NhanVien.xoaNhanVien(maNV)) {
 							JOptionPane.showMessageDialog(null, "Xóa thành công!");
 						}
@@ -385,12 +385,6 @@ public class FrameNhanVien extends JFrame {
 				
 				xoaHetDL();
 				List<NhanVien> listNV = new ArrayList<NhanVien>();
-				try {
-					dao_NhanVien = new DAOImpl_NhanVien();
-				} catch (RemoteException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 				listNV = dao_NhanVien.getAllNhanVien();
 				if (!maNV.trim().equals("")) {
 					List<NhanVien> listTemp = new ArrayList<NhanVien>();
@@ -542,8 +536,8 @@ public class FrameNhanVien extends JFrame {
 	}
 	
 	public static void docDuLieuDatabaseVaoTable() throws RemoteException {
-		List<NhanVien> listNV = new ArrayList<NhanVien>();
 		dao_NhanVien = new DAOImpl_NhanVien();
+		List<NhanVien> listNV = new ArrayList<NhanVien>();
 		
 		listNV = dao_NhanVien.getAllNhanVien();
 		DecimalFormat df = new DecimalFormat("#,##0.0");
@@ -557,8 +551,8 @@ public class FrameNhanVien extends JFrame {
 	}
 	
 	public static void docDuLieuVaoCmbTenNV() throws RemoteException {
-		List<NhanVien> listNV = new ArrayList<NhanVien>();
 		dao_NhanVien = new DAOImpl_NhanVien();
+		List<NhanVien> listNV = new ArrayList<NhanVien>();
 		
 		listNV = dao_NhanVien.getAllNhanVien();
 		cmbTenNV.addItem("");
@@ -568,8 +562,8 @@ public class FrameNhanVien extends JFrame {
 	}
 
 	public static void docDuLieuVaoCmbMaNV() throws RemoteException {
-		List<NhanVien> listNV = new ArrayList<NhanVien>();
 		dao_NhanVien = new DAOImpl_NhanVien();
+		List<NhanVien> listNV = new ArrayList<NhanVien>();
 		
 		listNV = dao_NhanVien.getAllNhanVien();
 		cmbMaNV.addItem("");
@@ -579,8 +573,8 @@ public class FrameNhanVien extends JFrame {
 	}
 
 	public static void docDuLieuVaoCmbCmnd() throws RemoteException {
-		List<NhanVien> listNV = new ArrayList<NhanVien>();
 		dao_NhanVien = new DAOImpl_NhanVien();
+		List<NhanVien> listNV = new ArrayList<NhanVien>();
 		
 		listNV = dao_NhanVien.getAllNhanVien();
 		cmbCmnd.addItem("");
@@ -590,8 +584,8 @@ public class FrameNhanVien extends JFrame {
 	}
 
 	public static void docDuLieuVaoCmbSdt() throws RemoteException {
-		List<NhanVien> listNV = new ArrayList<NhanVien>();
 		dao_NhanVien = new DAOImpl_NhanVien();
+		List<NhanVien> listNV = new ArrayList<NhanVien>();
 		
 		listNV = dao_NhanVien.getAllNhanVien();
 		cmbSdt.addItem("");

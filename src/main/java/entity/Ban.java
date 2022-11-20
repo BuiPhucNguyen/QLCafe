@@ -77,5 +77,10 @@ public class Ban implements Serializable {
 	public void setHoaDons(List<HoaDon> hoaDons) {
 		this.hoaDons = hoaDons;
 	}
+
+	public Ban(String maBan) {
+		super();
+		this.maBan = maBan;
+	}
 	
 }

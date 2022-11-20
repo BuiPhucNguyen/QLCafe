@@ -7,29 +7,24 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import dao.DAO_Ban;
 import dao.impl.DAOImpl_Ban;
 import entity.Ban;
 
 
 public class FormCapNhatBan extends JFrame implements KeyListener {
 	private JTextField txtTenBan;
-	private JTextField txtGiaPhong;
-	private JComboBox<String> cmbLoaiPhong;
 	private JButton btnCapNhat;
-	private DAOImpl_Ban dao_Ban;
+	private static DAOImpl_Ban dao_Ban;
 
 	public FormCapNhatBan() throws RemoteException {
 		dao_Ban = new DAOImpl_Ban();

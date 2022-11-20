@@ -7,9 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
-
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,7 +15,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 
-import dao.DAO_TaiKhoan;
 import dao.impl.DAOImpl_TaiKhoan;
 import entity.TaiKhoan;
 
@@ -28,9 +24,11 @@ public class FrameDoiMatKhau extends JFrame implements KeyListener{
 	private JPasswordField txtMatkhauMoi;
 	private JPasswordField txtXacNhan;
 	private JButton btnDoiMatKhau;
+	private static DAOImpl_TaiKhoan dao_TaiKhoan;
 
-	public FrameDoiMatKhau() {
-
+	public FrameDoiMatKhau() throws RemoteException {
+		dao_TaiKhoan = new DAOImpl_TaiKhoan();
+		
 		setTitle("ĐỔI MẬT KHẨU");
 		setSize(400, 220);
 		setLocationRelativeTo(null);
@@ -86,9 +84,6 @@ public class FrameDoiMatKhau extends JFrame implements KeyListener{
 		txtMatkhauMoi.addKeyListener(this);
 		txtXacNhan.addKeyListener(this);
 		btnDoiMatKhau.addActionListener(new ActionListener() {
-
-			private DAOImpl_TaiKhoan dao_TaiKhoan;
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -103,7 +98,6 @@ public class FrameDoiMatKhau extends JFrame implements KeyListener{
 					try {
 						TaiKhoan tk = FrameDangNhap.getTaiKhoan();
 						tk.setMatKhau(xacNhan);
-						dao_TaiKhoan = new DAOImpl_TaiKhoan();
 						if (dao_TaiKhoan.capnhatTaiKhoan(tk) == true) {
 							JOptionPane.showMessageDialog(null, "Đổi mật khẩu thành công");
 							dispose();

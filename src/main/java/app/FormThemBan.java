@@ -7,7 +7,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -19,7 +18,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import dao.DAO_Ban;
 import dao.impl.DAOImpl_Ban;
 import entity.Ban;
 
@@ -27,12 +25,10 @@ import entity.Ban;
 public class FormThemBan extends JFrame implements KeyListener{
 	private JButton btnThem;
 	private JTextField txtTenBan;
-	private JTextField txtGiaPhong;
-	private JComboBox<String> cmbLoaiPhong;
-	private DAOImpl_Ban dao_Ban;
+	private static DAOImpl_Ban dao_Ban;
 
-	public FormThemBan() {
-		
+	public FormThemBan() throws RemoteException {
+		dao_Ban = new DAOImpl_Ban();
 		// ------------------
 		setTitle("THÊM BÀN");
 		setSize(380, 170);
@@ -72,7 +68,7 @@ public class FormThemBan extends JFrame implements KeyListener{
 						return;
 					} else {
 						try {
-							dao_Ban = new DAOImpl_Ban();
+							
 							String maBan;
 							List<Ban> list = dao_Ban.getAllBan();
 							if (list.size() == 1)
@@ -124,11 +120,10 @@ public class FormThemBan extends JFrame implements KeyListener{
 	}
 
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws RemoteException {
 		new FormThemBan().setVisible(true);
 	}
 	private boolean trungTen() throws RemoteException {
-		dao_Ban = new DAOImpl_Ban();
 		List<Ban> list = dao_Ban.getAllBan();
 		String tenBan = txtTenBan.getText();
 		for (Ban b : list) {

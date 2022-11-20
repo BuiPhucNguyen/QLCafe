@@ -1,6 +1,5 @@
 package app;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -12,12 +11,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -32,9 +27,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -44,8 +36,6 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import com.toedter.calendar.JDateChooser;
 
-import dao.DAO_CTHD;
-import dao.DAO_NhanVien;
 import dao.impl.DAOImpl_Ban;
 import dao.impl.DAOImpl_CTHD;
 import dao.impl.DAOImpl_DichVu;
@@ -61,47 +51,48 @@ public class FrameDatBan extends JFrame {
 	public static JTextField txtTenKH;
 	public static JTextField txtCmnd;
 	public static JTextField txtLienLac;
-
 	public static DefaultTableModel tableModelPhongTrong;
 	public static JTable tablePhongTrong;
-
 	public static String maPhongMoiDat = "";
 	public static String maHDMoiDat = "";
 	public static String maKHDatPhong = "";
-
 	private JButton btnLamMoi;
-
 	public static JDateChooser txtNgaySinh;
-
 	public static JComboBox<String> cmbDanhSachSdt;
 	public static JComboBox<String> cmbGioiTinh;
 	public static JComboBox<String> cmbTimKhachHang;
-	private static DAOImpl_Ban dao_Ban;
-	private static DAOImpl_DichVu dao_DichVu;
-
-	private static DefaultTableModel tableModelListDV;
-	private static JTable tableListDV;
-	private static DefaultTableModel tableModelHoaDonDV;
-	private static JTable tableHoaDonDV;
-
+	public static DefaultTableModel tableModelListDV;
+	public static JTable tableListDV;
+	public static DefaultTableModel tableModelHoaDonDV;
+	public static JTable tableHoaDonDV;
 	private static JComboBox<String> cmbDanhSachDV;
 	private JButton btnDatDichVu;
 	private JButton btnHuyDichVu;
-	private JTextField txtSoLuong;
-	private static JLabel lblBanDangChon;
+	public static JTextField txtSoLuong;
+	public static JLabel lblBanDangChon;
 	private JLabel lblMuaMangVe;
-	private JCheckBox chkMangVe;
-	private static DefaultTableModel tableModelBanDaDat;
-	private static JTable tableBanDaDat;
+	public static JCheckBox chkMangVe;
+	public static DefaultTableModel tableModelBanDaDat;
+	public static JTable tableBanDaDat;
 	private JButton btnDatBan;
 	private JButton btnHuyBan;
 	private JButton btnTimDV;
 	private JButton btnCapNhapSL;
-	protected static DAOImpl_HoaDon dao_HD;
-	protected static DAOImpl_NhanVien dao_NV;
-	protected static DAOImpl_CTHD dao_CTHD;
+	private JButton btnDoiBan;
+	
+	private static DAOImpl_HoaDon dao_HD;
+	private static DAOImpl_NhanVien dao_NV;
+	private static DAOImpl_CTHD dao_CTHD;
+	private static DAOImpl_Ban dao_Ban;
+	private static DAOImpl_DichVu dao_DichVu;
 
 	public JPanel createPanelDatPhong() throws RemoteException {
+		
+		dao_HD = new DAOImpl_HoaDon();
+		dao_NV = new DAOImpl_NhanVien();
+		dao_CTHD = new DAOImpl_CTHD();
+		dao_Ban = new DAOImpl_Ban();
+		dao_DichVu = new DAOImpl_DichVu();
 
 		setTitle("ĐẶT PHÒNG");
 		setSize(948, 660);
@@ -198,7 +189,7 @@ public class FrameDatBan extends JFrame {
 		pnlBanDaDat.add(new JScrollPane(tableBanDaDat));
 		// -----------------------------------------------------------------------------------------------------------------
 		btnDatBan = new JButton("ĐẶT BÀN");
-		btnDatBan.setBounds(510, 70, 200, 42);
+		btnDatBan.setBounds(510, 30, 200, 42);
 		btnDatBan.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnDatBan.setIcon(new ImageIcon("image/datdichvu.png"));
 		btnDatBan.setBackground(new Color(131, 77, 30));
@@ -207,18 +198,27 @@ public class FrameDatBan extends JFrame {
 		pnlContentPane.add(btnDatBan);
 
 		btnHuyBan = new JButton("HỦY ĐẶT BÀN");
-		btnHuyBan.setBounds(510, 130, 200, 42);
+		btnHuyBan.setBounds(510, 90, 200, 42);
 		btnHuyBan.setFont(new Font("Tahoma", Font.BOLD, 13));
 		btnHuyBan.setIcon(new ImageIcon("image/huydatphong.png"));
 		btnHuyBan.setBackground(new Color(131, 77, 30));
 		btnHuyBan.setForeground(Color.WHITE);
 		btnHuyBan.setFocusPainted(false);
 		pnlContentPane.add(btnHuyBan);
+		
+		btnDoiBan = new JButton("ĐỔI BÀN");
+		btnDoiBan.setBounds(510, 150, 200, 42);
+		btnDoiBan.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnDoiBan.setIcon(new ImageIcon("image/lammoi.png"));
+		btnDoiBan.setBackground(new Color(131, 77, 30));
+		btnDoiBan.setForeground(Color.WHITE);
+		btnDoiBan.setFocusPainted(false);
+		pnlContentPane.add(btnDoiBan);
 
 		JPanel pnlMuaMangVe = new JPanel();
 		pnlMuaMangVe.setLayout(null);
 		pnlMuaMangVe.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), ""));
-		pnlMuaMangVe.setBounds(510, 190, 200, 42);
+		pnlMuaMangVe.setBounds(510, 210, 200, 42);
 		pnlMuaMangVe.setBackground(Color.WHITE);
 		lblMuaMangVe = new JLabel("Mua mang về");
 		lblMuaMangVe.setBounds(10, 5, 170, 33);
@@ -321,7 +321,7 @@ public class FrameDatBan extends JFrame {
 		tableHoaDonDV.getColumnModel().getColumn(3).setPreferredWidth(5);
 		tableHoaDonDV.getColumnModel().getColumn(4).setPreferredWidth(20);
 
-//		pnlPhongDaDat.add(pnlMuaMangVe);
+
 
 		JPanel pnlCmbPhong = new JPanel();
 		pnlCmbPhong.setBorder(
@@ -356,7 +356,7 @@ public class FrameDatBan extends JFrame {
 		lblSoLuong.setBounds(490, 150, 220, 42);
 		lblSoLuong.setFont(new Font("Tahoma", Font.BOLD, 13));
 		pnlPhongDaDat.add(lblSoLuong);
-		txtSoLuong = new JTextField();
+		txtSoLuong = new JTextField("1");
 		txtSoLuong.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		txtSoLuong.setBounds(610, 155, 40, 30);
 		pnlPhongDaDat.add(txtSoLuong);
@@ -476,15 +476,72 @@ public class FrameDatBan extends JFrame {
 				// TODO Auto-generated method stub
 				if (chkMangVe.isSelected()) {
 					lblBanDangChon.setText("MUA MANG VỀ");
-					XoaDLTableHoaDon();
+					DefaultTableModel dm = (DefaultTableModel) tableHoaDonDV.getModel();
+					int rowCount = dm.getRowCount();
+					// Remove rows one by one from the end of the table
+					for (int i = rowCount - 1; i >= 0; i--) {
+						dm.removeRow(i);
+					}
 					tableBanDaDat.clearSelection();
 					tablePhongTrong.clearSelection();
 					tablePhongTrong.enable(false);
 					tableBanDaDat.enable(false);
+					tableListDV.clearSelection();
+					String maHB="";
+					List<HoaDon> list;
+					try {
+						list = dao_HD.getAllHD();
+						Ban b = new Ban("B9999");
+						NhanVien nv_temp = FrameDangNhap.getTaiKhoan().getTenTaiKhoan();
+						NhanVien nv = dao_NV.getNhanVienTheoMa(nv_temp.getMaNV());
+						if (list.size() == 0)
+							maHB = "HD1001";
+						else {
+							String maPHCuoi = list.get(list.size() - 1).getMaHD().trim();
+							int layMaSo = Integer.parseInt(maPHCuoi.substring(2, maPHCuoi.length()));
+							maHB = "HD" + (layMaSo + 1);
+						}
+						HoaDon hd = new HoaDon(maHB, nv, b, false, new Date());
+						dao_HD.themHD(hd);
+						b.setTenBan("Mua mang về");
+						b.setTrangThai(true);
+						dao_Ban.capnhatBan(b);
+						
+						FrameThanhToan.XoaDLTableBanDaDat();
+						FrameThanhToan.docDuLieuDatabaseVaoTableBanDaDat();
+						FrameThanhToan.docDLCmbBan();
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
 				} else {
 					lblBanDangChon.setText("");
 					tablePhongTrong.enable(true);
 					tableBanDaDat.enable(true);
+					
+					try {
+						List<HoaDon> list = dao_HD.getHDChuaThanhToan();
+						HoaDon hd_temp = null;
+						for (HoaDon hd : list) {
+							if (hd.getMaBan().getMaBan().equalsIgnoreCase("B9999")) {
+								hd_temp = hd;
+								break;
+							}
+						}
+						if (dao_HD.xoaHD(hd_temp.getMaHD())) {
+							Ban b = new Ban("B9999", "Mua mang về", false);
+							dao_Ban.capnhatBan(b);
+							FrameThanhToan.XoaDLTableBanDaDat();
+							FrameThanhToan.docDuLieuDatabaseVaoTableBanDaDat();
+							FrameThanhToan.docDLCmbBan();
+						}
+						
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
 				}
 			}
 		});
@@ -502,10 +559,11 @@ public class FrameDatBan extends JFrame {
 				}
 
 				XoaDLTableDV();
-
-				lblBanDangChon.setText("");
-				chkMangVe.setSelected(false);
-				txtSoLuong.setText("");
+				
+				if (!chkMangVe.isSelected()) {
+					lblBanDangChon.setText("");
+				}
+				txtSoLuong.setText("1");
 				cmbDanhSachDV.setSelectedIndex(0);
 
 				tableBanDaDat.clearSelection();
@@ -544,9 +602,6 @@ public class FrameDatBan extends JFrame {
 				List<HoaDon> list;
 
 				try {
-					dao_HD = new DAOImpl_HoaDon();
-					dao_NV = new DAOImpl_NhanVien();
-
 					NhanVien nv_temp = FrameDangNhap.getTaiKhoan().getTenTaiKhoan();
 					NhanVien nv = dao_NV.getNhanVienTheoMa(nv_temp.getMaNV());
 
@@ -558,13 +613,20 @@ public class FrameDatBan extends JFrame {
 						int layMaSo = Integer.parseInt(maPHCuoi.substring(2, maPHCuoi.length()));
 						maHB = "HD" + (layMaSo + 1);
 					}
-					HoaDon hd = new HoaDon(maHB, nv, b, false);
+					HoaDon hd = new HoaDon(maHB, nv, b, false, new Date());
+					
 
 					try {
 						if (dao_Ban.capnhatBan(b) && dao_HD.themHD(hd)) {
 							tableModelPhongTrong.removeRow(r);
 							XoaDLTableBanDaDat();
 							docDuLieuDatabaseVaoTableBanDaDat();
+							
+							FrameThanhToan.XoaDLTableBanDaDat();
+							FrameThanhToan.docDuLieuDatabaseVaoTableBanDaDat();
+							FrameThanhToan.docDLCmbBan();
+							
+							JOptionPane.showMessageDialog(null, "Đặt bàn thành công!");
 						}
 					} catch (RemoteException e1) {
 						// TODO Auto-generated catch block
@@ -593,9 +655,6 @@ public class FrameDatBan extends JFrame {
 				Ban b = new Ban(maBan, tenBan, false);
 
 				try {
-					dao_HD = new DAOImpl_HoaDon();
-					dao_Ban = new DAOImpl_Ban();
-
 					List<HoaDon> list = dao_HD.getHDChuaThanhToan();
 					HoaDon hd_temp = null;
 					for (HoaDon hd : list) {
@@ -614,6 +673,10 @@ public class FrameDatBan extends JFrame {
 								docDuLieuDatabaseVaoTableBan();
 
 								lblBanDangChon.setText("");
+								
+								FrameThanhToan.XoaDLTableBanDaDat();
+								FrameThanhToan.docDuLieuDatabaseVaoTableBanDaDat();
+								FrameThanhToan.docDLCmbBan();
 							}
 						}
 					} catch (Exception e2) {
@@ -624,6 +687,65 @@ public class FrameDatBan extends JFrame {
 					// TODO Auto-generated catch block
 					JOptionPane.showMessageDialog(null, "Chỉ bàn trống mới được hủy!");
 				}
+			}
+		});
+		
+		btnDoiBan.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				int vitri_banDaDat = tableBanDaDat.getSelectedRow();
+				if (vitri_banDaDat == -1) {
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn bàn cần đổi!");
+					return;
+				}
+				
+				int vitri_banTrong = tablePhongTrong.getSelectedRow();
+				if (vitri_banTrong == -1) {
+					JOptionPane.showMessageDialog(null, "Vui lòng chọn bàn trống cần đổi qua!");
+					return;
+				}
+				
+				String maBanTrong = tableModelPhongTrong.getValueAt(vitri_banTrong, 0).toString();
+				String tenBanTrong = tableModelPhongTrong.getValueAt(vitri_banTrong, 1).toString();
+				
+				String maBanDaDat = tableModelBanDaDat.getValueAt(vitri_banDaDat, 0).toString();
+				String tenBanDaDat = tableModelBanDaDat.getValueAt(vitri_banDaDat, 1).toString();
+				String maHD = "";
+				try {
+					List<HoaDon> list = dao_HD.getHDChuaThanhToan();
+					for (HoaDon hd_temp : list) {
+						if (hd_temp.getMaBan().getTenBan().equalsIgnoreCase(tenBanDaDat)) {
+							maHD = hd_temp.getMaHD();
+						}
+					}
+					if (dao_HD.capNhatBan(maHD, maBanTrong)) {
+						if (dao_Ban.capnhatBan(new Ban(maBanDaDat, tenBanDaDat, false))&&dao_Ban.capnhatBan(new Ban(maBanTrong, tenBanTrong, true))) {
+							XoaDLTableBan();
+							docDuLieuDatabaseVaoTableBan();
+							XoaDLTableBanDaDat();
+							docDuLieuDatabaseVaoTableBanDaDat();
+							tablePhongTrong.clearSelection();
+							tableBanDaDat.clearSelection();
+							lblBanDangChon.setText(tenBanTrong);
+							
+							for (int i = 0; i < tableModelBanDaDat.getRowCount(); i++) {
+								if (tableModelBanDaDat.getValueAt(i, 0).toString().equalsIgnoreCase(maBanTrong)) {
+									tableBanDaDat.changeSelection(i, i, false, false);
+									break;
+								}
+							}
+							FrameThanhToan.XoaDLTableBanDaDat();
+							FrameThanhToan.docDuLieuDatabaseVaoTableBanDaDat();
+							FrameThanhToan.docDLCmbBan();
+							JOptionPane.showMessageDialog(null, "Đổi bản thành công!");
+						}
+					}
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}	
 			}
 		});
 
@@ -637,11 +759,19 @@ public class FrameDatBan extends JFrame {
 					JOptionPane.showMessageDialog(null, "Vui lòng chọn dịch vụ cần đặt!");
 					return;
 				}
+				String maNuoc = tableModelListDV.getValueAt(r, 0).toString();
+
+				for (int i = 0; i < tableHoaDonDV.getRowCount(); i++) {
+					if (tableModelHoaDonDV.getValueAt(i, 0).toString().equalsIgnoreCase(maNuoc)) {
+						JOptionPane.showMessageDialog(null, "Dịch vụ đã được đặt!");
+						return;
+					}
+				}
 				if (txtSoLuong.getText().trim().length() != 0) {
 					try {
 						int sl = Integer.parseInt(txtSoLuong.getText());
-						if (sl <= 0) {
-							JOptionPane.showMessageDialog(null, "Số lượng phải lớn hơn 0!");
+						if (sl <= 0 || sl > 100) {
+							JOptionPane.showMessageDialog(null, "Số lượng phải lớn hơn 0 và nhỏ hơn 100!");
 							return;
 						}
 					} catch (Exception e2) {
@@ -655,21 +785,13 @@ public class FrameDatBan extends JFrame {
 					JOptionPane.showMessageDialog(null, "Vui lòng chọn bàn cần đặt");
 					return;
 				}
-				String maNuoc = tableModelListDV.getValueAt(r, 0).toString();
-
-				for (int i = 0; i < tableHoaDonDV.getRowCount(); i++) {
-					if (tableModelHoaDonDV.getValueAt(i, 0).toString().equalsIgnoreCase(maNuoc)) {
-						JOptionPane.showMessageDialog(null, "Dịch vụ đã được đặt!");
-						return;
-					}
-				}
 
 				String tenNuoc = tableModelListDV.getValueAt(r, 1).toString();
 				try {
 					Nuoc n = dao_DichVu.getDVTheoTen(tenNuoc);
 
 					String maHD = "";
-					dao_HD = new DAOImpl_HoaDon();
+					Date date_temp = null;
 					List<HoaDon> list = dao_HD.getHDChuaThanhToan();
 					for (HoaDon hd_temp : list) {
 						if (hd_temp.getMaBan().getTenBan().equalsIgnoreCase(lblBanDangChon.getText())) {
@@ -677,17 +799,14 @@ public class FrameDatBan extends JFrame {
 						}
 					}
 					NhanVien nv_temp = FrameDangNhap.getTaiKhoan().getTenTaiKhoan();
-					dao_NV = new DAOImpl_NhanVien();
 					NhanVien nv = dao_NV.getNhanVienTheoMa(nv_temp.getMaNV());
-					dao_Ban = new DAOImpl_Ban();
 					Ban b = dao_Ban.getBanTheoTen(lblBanDangChon.getText().trim());
-					HoaDon hd = new HoaDon(maHD, nv, b, false);
+					HoaDon hd = new HoaDon(maHD);
 
 					String soLuong = txtSoLuong.getText();
 
 					ChiTietHoaDon cthd = new ChiTietHoaDon(hd, n, Integer.parseInt(soLuong));
 
-					dao_CTHD = new DAOImpl_CTHD();
 					if (dao_CTHD.themHD(cthd)) {
 						JOptionPane.showMessageDialog(null, "Thêm thành công!");
 						XoaDLTableHoaDon();
@@ -726,10 +845,8 @@ public class FrameDatBan extends JFrame {
 				}
 
 				try {
-					String soLuong = txtSoLuong.getText();
-					
+					String soLuong = txtSoLuong.getText();					
 					String maHD = "";
-					dao_HD = new DAOImpl_HoaDon();
 					List<HoaDon> list = dao_HD.getHDChuaThanhToan();
 					for (HoaDon hd_temp : list) {
 						if (hd_temp.getMaBan().getTenBan().equalsIgnoreCase(lblBanDangChon.getText())) {
@@ -770,7 +887,6 @@ public class FrameDatBan extends JFrame {
 				}
 				try {
 					String maHD = "";
-					dao_HD = new DAOImpl_HoaDon();
 					List<HoaDon> list = dao_HD.getHDChuaThanhToan();
 					for (HoaDon hd_temp : list) {
 						if (hd_temp.getMaBan().getTenBan().equalsIgnoreCase(lblBanDangChon.getText())) {
@@ -822,7 +938,7 @@ public class FrameDatBan extends JFrame {
 				}
 			}
 		});
-
+		
 		tableHoaDonDV.addMouseListener(new MouseListener() {
 
 			@Override
@@ -861,7 +977,6 @@ public class FrameDatBan extends JFrame {
 	}
 
 	public static void docDuLieuDatabaseVaoTableBan() throws RemoteException {
-		dao_Ban = new DAOImpl_Ban();
 		List<Ban> list = dao_Ban.getAllBanTrong();
 
 		for (Ban b : list) {
@@ -872,7 +987,6 @@ public class FrameDatBan extends JFrame {
 	}
 
 	public static void docDuLieuDatabaseVaoTableBanDaDat() throws RemoteException {
-		dao_Ban = new DAOImpl_Ban();
 		List<Ban> list = dao_Ban.getAllBanDaDat();
 
 		for (Ban b : list) {
@@ -883,8 +997,6 @@ public class FrameDatBan extends JFrame {
 	}
 
 	public static void docDuLieuDatabaseVaoTableDV() throws RemoteException {
-		dao_DichVu = new DAOImpl_DichVu();
-
 		List<Nuoc> list = dao_DichVu.getAllDichVuConMon();
 		DecimalFormat df = new DecimalFormat("#,##0.0");
 		for (Nuoc dv : list) {
@@ -893,8 +1005,6 @@ public class FrameDatBan extends JFrame {
 	}
 
 	public static void docDuLieuDatabaseVaoTableHD(String tenBan) throws RemoteException {
-		dao_CTHD = new DAOImpl_CTHD();
-		dao_HD = new DAOImpl_HoaDon();
 		String maHD = "";
 		List<HoaDon> listhd = dao_HD.getHDChuaThanhToan();
 		for (HoaDon hd_temp : listhd) {
@@ -913,7 +1023,6 @@ public class FrameDatBan extends JFrame {
 
 	public static void docDLCmbDV() throws RemoteException {
 		cmbDanhSachDV.addItem("");
-		dao_DichVu = new DAOImpl_DichVu();
 
 		List<Nuoc> list = dao_DichVu.getAllDichVuConMon();
 		for (Nuoc dv : list) {

@@ -7,19 +7,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import dao.DAO_DichVu;
 import dao.impl.DAOImpl_DichVu;
 import entity.Nuoc;
 
@@ -28,8 +25,6 @@ public class FormThemDV extends JFrame implements KeyListener {
 	private JButton btnThem;
 	private JTextField txtTenDV;
 	private JTextField txtGiaDV;
-	private JComboBox<String> cmbDonViTinh;
-	private JTextField txtSoLuong;
 	private static DAOImpl_DichVu dao_DichVu;
 	
 

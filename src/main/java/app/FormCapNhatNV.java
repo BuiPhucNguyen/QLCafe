@@ -7,10 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.util.Date;
-import java.util.List;
-
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -19,13 +16,13 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
 
-import dao.DAO_NhanVien;
 import dao.impl.DAOImpl_NhanVien;
 import entity.NhanVien;
-import entity.TaiKhoan;
+
 
 public class FormCapNhatNV extends JFrame implements KeyListener {
 	private JTextField txtTenNV;
@@ -33,14 +30,13 @@ public class FormCapNhatNV extends JFrame implements KeyListener {
 	private JTextField txtCmnd;
 	private JTextField txtSdt;
 	private JComboBox<String> cmbChucVu;
-	private JComboBox<String> cmbCa;
 	private JTextField txtLuong;
 	private JButton btnCapNhat;
-	private String actor;
 	private JDateChooser txtNgaySinh;
+	private static DAOImpl_NhanVien dao_NhanVien;
 
-	public FormCapNhatNV() {
-		
+	public FormCapNhatNV() throws RemoteException {
+		dao_NhanVien = new DAOImpl_NhanVien();
 		// ------------------------------
 		setTitle("CẬP NHẬT NHÂN VIÊN");
 		setSize(570, 360);
@@ -81,16 +77,6 @@ public class FormCapNhatNV extends JFrame implements KeyListener {
 		txtCmnd.setBounds(118, 139, 150, 30);
 		txtCmnd.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		pnlContentPane.add(txtCmnd);
-
-//		JLabel lblCa = new JLabel("CA LÀM VIỆC: ");
-//		lblCa.setBounds(18, 204, 120, 14);
-//		lblCa.setFont(new Font("Arial", Font.BOLD, 13));
-//		pnlContentPane.add(lblCa);
-//		String[] ca = { "8:00AM-4:00PM", "4:00PM-12:00AM", "12:00AM-8:00AM" };
-//		cmbCa = new JComboBox<String>(ca);
-//		cmbCa.setBounds(118, 196, 150, 30);
-//		cmbCa.setFont(new Font("Times New Roman", Font.PLAIN, 15));
-//		pnlContentPane.add(cmbCa);
 
 		JLabel lblNgaysinh = new JLabel("NGÀY SINH: ");
 		lblNgaysinh.setBounds(295, 36, 120, 20);
@@ -164,21 +150,12 @@ public class FormCapNhatNV extends JFrame implements KeyListener {
 		cmbGioiTinh.addKeyListener(this);
 		
 		btnCapNhat.addActionListener(new ActionListener() {
-			
-			private DAOImpl_NhanVien dao_NhanVien;
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				if (!validInput()) {
 					return;
 				} else {
-					try {
-						dao_NhanVien = new DAOImpl_NhanVien();
-					} catch (RemoteException e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
-					}
 					String maNV = FrameNhanVien.tableModel.getValueAt(FrameNhanVien.table.getSelectedRow(), 0).toString();
 					String tenNV = txtTenNV.getText();
 					String gioiTinh = cmbGioiTinh.getSelectedItem().toString();
@@ -202,13 +179,6 @@ public class FormCapNhatNV extends JFrame implements KeyListener {
 					JOptionPane.showMessageDialog(null, "Cập nhật thành công!", "Thành công",
 							JOptionPane.INFORMATION_MESSAGE);
 
-					FrameNhanVien.xoaHetDL();
-					try {
-						FrameNhanVien.docDuLieuDatabaseVaoTable();
-					} catch (RemoteException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
 					int itemCount = FrameNhanVien.cmbTenNV.getItemCount();
 					for (int i = 0; i < itemCount; i++) {
 						FrameNhanVien.cmbTenNV.removeItemAt(0);
@@ -226,6 +196,13 @@ public class FormCapNhatNV extends JFrame implements KeyListener {
 						FrameNhanVien.cmbSdt.removeItemAt(0);
 					}
 					try {
+						DefaultTableModel dm = (DefaultTableModel) FrameNhanVien.table.getModel();
+						int rowCount = dm.getRowCount();
+						// Remove rows one by one from the end of the table
+						for (int i = rowCount - 1; i >= 0; i--) {
+							dm.removeRow(i);
+						}
+						FrameNhanVien.docDuLieuDatabaseVaoTable();
 						FrameNhanVien.docDuLieuVaoCmbMaNV();
 						FrameNhanVien.docDuLieuVaoCmbTenNV();
 						FrameNhanVien.docDuLieuVaoCmbCmnd();

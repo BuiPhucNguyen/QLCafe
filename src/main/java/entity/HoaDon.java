@@ -1,6 +1,7 @@
 package entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -35,6 +36,13 @@ public class HoaDon implements Serializable {
 	
 	@Column(name = "daThanhToan", nullable = false)
 	private boolean daThanhToan;
+	
+	@Column(nullable = true)
+	private double tongTien;
+	
+	@Column(nullable = false, columnDefinition = "date")
+	private Date ngayDat;
+	
 	public HoaDon() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -69,12 +77,32 @@ public class HoaDon implements Serializable {
 	public void setDaThanhToan(boolean daThanhToan) {
 		this.daThanhToan = daThanhToan;
 	}
-	public HoaDon(String maHD, NhanVien maNV, Ban maBan, boolean daThanhToan) {
+	
+	
+	
+	public double getTongTien() {
+		return tongTien;
+	}
+	public void setTongTien(double tongTien) {
+		this.tongTien = tongTien;
+	}
+	public Date getNgayDat() {
+		return ngayDat;
+	}
+	public void setNgayDat(Date ngayDat) {
+		this.ngayDat = ngayDat;
+	}
+	public HoaDon(String maHD, NhanVien maNV, Ban maBan, boolean daThanhToan, Date ngayDat) {
 		super();
 		this.maHD = maHD;
 		this.maNV = maNV;
 		this.maBan = maBan;
 		this.daThanhToan = daThanhToan;
+		this.ngayDat = ngayDat;
+	}
+	public HoaDon(String maHD) {
+		super();
+		this.maHD = maHD;
 	}
 	
 	

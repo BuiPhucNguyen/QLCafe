@@ -15,7 +15,6 @@ import java.rmi.RemoteException;
 import java.text.ParseException;
 
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -98,7 +97,7 @@ public class GUI_QuanLy extends JFrame implements ActionListener, MouseListener 
 		tabbedPane.addTab("QUẢN LÝ NHÂN VIÊN", new ImageIcon("image/nhanvien.png"), pnlNhanVien, "QUẢN LÝ NHÂN VIÊN");
 		tabbedPane.addTab("QUẢN LÝ BÀN", new ImageIcon("image/phonghat.png"), pnlPhongHat, "QUẢN LÝ BÀN");
 		tabbedPane.addTab("QUẢN LÝ DỊCH VỤ", new ImageIcon("image/dichvu.png"), pnlDichVu, "QUẢN LÝ DỊCH VỤ");
-		tabbedPane.addTab("THỐNG KÊ", new ImageIcon("image/thongke.png"), tabThongKe, "THỐNG KÊ");
+		tabbedPane.addTab("THỐNG KÊ", new ImageIcon("image/thongke.png"), pnlTKDoanhThu, "THỐNG KÊ");
 		
 		return tabbedPane;
 	}
@@ -213,17 +212,29 @@ public class GUI_QuanLy extends JFrame implements ActionListener, MouseListener 
 			int result = JOptionPane.showConfirmDialog(this, "Bạn có muốn đăng xuất không?", "?!",
 					JOptionPane.YES_NO_OPTION);
 			if (result == 0) {
-				FrameDangNhap frameDN = new FrameDangNhap();
-				frameDN.setVisible(true);
-				frameDN.setLocationRelativeTo(null);
-				dispose();
+				FrameDangNhap frameDN;
+				try {
+					frameDN = new FrameDangNhap();
+					frameDN.setVisible(true);
+					frameDN.setLocationRelativeTo(null);
+					dispose();
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}	
 			}
 		}
 		if (o.equals(lblDoiMK)) {
-			FrameDoiMatKhau frameDoiMK = new FrameDoiMatKhau();
-			frameDoiMK.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-			frameDoiMK.setVisible(true);
-			frameDoiMK.setLocationRelativeTo(null);
+			FrameDoiMatKhau frameDoiMK;
+			try {
+				frameDoiMK = new FrameDoiMatKhau();
+				frameDoiMK.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+				frameDoiMK.setVisible(true);
+				frameDoiMK.setLocationRelativeTo(null);
+			} catch (RemoteException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 	}
 

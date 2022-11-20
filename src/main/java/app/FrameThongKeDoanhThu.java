@@ -9,10 +9,8 @@ import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.FileOutputStream;
-import java.sql.SQLException;
+import java.rmi.RemoteException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -61,8 +59,12 @@ import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 
 import com.toedter.calendar.JDateChooser;
 
+import dao.impl.DAOImpl_HoaDon;
+import dao.impl.DAOImpl_NhanVien;
+import entity.HoaDon;
+import entity.NhanVien;
 
-public class FrameThongKeDoanhThu extends JFrame  {
+public class FrameThongKeDoanhThu extends JFrame {
 	private JComboBox<String> cmbTieuChi;
 	private JButton btnTimKiem;
 	private JButton btnLamMoi;
@@ -77,14 +79,17 @@ public class FrameThongKeDoanhThu extends JFrame  {
 	private JRadioButton radGiamDan;
 	private JButton btnXuatExcel;
 	private JButton btnHoaDon;
-	private JButton btnDVDaBan;
 	private JDateChooser txtNgayMin;
 	private JDateChooser txtNgayMax;
-	private JComboBox<String> cmbMaHD;
+	private static JComboBox<String> cmbMaHD;
+	private static DAOImpl_HoaDon dao_HD;
+	private static DAOImpl_NhanVien dao_NV;
 
+	public JPanel createPanelDoanhThu() throws RemoteException {
 
-	public JPanel createPanelDoanhThu() {
-		
+		dao_HD = new DAOImpl_HoaDon();
+		dao_NV = new DAOImpl_NhanVien();
+
 		Toolkit toolkit = this.getToolkit(); /* Lấy độ phân giải màn hình */
 		Dimension d = toolkit.getScreenSize();
 
@@ -93,21 +98,13 @@ public class FrameThongKeDoanhThu extends JFrame  {
 		pnlContentPane.setLayout(null);
 		setContentPane(pnlContentPane);
 		// Chức năng
-//		btnHoaDon = new JButton("XEM HÓA ĐƠN", new ImageIcon("image/hoadon.png"));
-//		btnHoaDon.setBounds((int) (d.getWidth() - 850), 15, 190, 45);
-//		btnHoaDon.setFont(new Font("Tahoma", Font.BOLD, 15));
-//		btnHoaDon.setBackground(new Color(131, 77, 30));
-//		btnHoaDon.setForeground(Color.WHITE);
-//		btnHoaDon.setFocusPainted(false);
-//		pnlContentPane.add(btnHoaDon);
-//
-//		btnDVDaBan = new JButton("DỊCH VỤ ĐÃ BÁN", new ImageIcon("image/dichvu.png"));
-//		btnDVDaBan.setBounds((int) (d.getWidth() - 650), 15, 240, 45);
-//		btnDVDaBan.setFont(new Font("Tahoma", Font.BOLD, 15));
-//		btnDVDaBan.setBackground(new Color(131, 77, 30));
-//		btnDVDaBan.setForeground(Color.WHITE);
-//		btnDVDaBan.setFocusPainted(false);
-//		pnlContentPane.add(btnDVDaBan);
+		btnHoaDon = new JButton("XEM HÓA ĐƠN", new ImageIcon("image/hoadon.png"));
+		btnHoaDon.setBounds((int) (d.getWidth() - 600), 15, 190, 45);
+		btnHoaDon.setFont(new Font("Tahoma", Font.BOLD, 15));
+		btnHoaDon.setBackground(new Color(131, 77, 30));
+		btnHoaDon.setForeground(Color.WHITE);
+		btnHoaDon.setFocusPainted(false);
+		pnlContentPane.add(btnHoaDon);
 
 		btnXuatExcel = new JButton("XUẤT EXCEL", new ImageIcon("image/xuatexcel.png"));
 		btnXuatExcel.setFont(new Font("Tahoma", Font.BOLD, 15));
@@ -121,7 +118,7 @@ public class FrameThongKeDoanhThu extends JFrame  {
 		 */
 		JPanel pnlTimKiem = new JPanel();
 		pnlTimKiem.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), ""));
-		pnlTimKiem.setBounds(20, 15, 195, (int) (d.getHeight() - 149));
+		pnlTimKiem.setBounds(20, 15, 195, (int) (d.getHeight() - 109));
 		pnlTimKiem.setBackground(new Color(252, 242, 217));
 		pnlTimKiem.setLayout(null);
 		pnlContentPane.add(pnlTimKiem);
@@ -195,7 +192,7 @@ public class FrameThongKeDoanhThu extends JFrame  {
 		cmbMaHD.setFont(new Font("Times New Roman", Font.PLAIN, 15));
 		AutoCompleteDecorator.decorate(cmbMaHD);
 		pnlTimKiem.add(cmbMaHD);
-		cmbMaHD.setMaximumRowCount(1);
+		cmbMaHD.setMaximumRowCount(2);
 
 		JLabel lblSX = new JLabel("SẮP XẾP THEO:", SwingConstants.CENTER);
 		lblSX.setOpaque(true);
@@ -204,7 +201,7 @@ public class FrameThongKeDoanhThu extends JFrame  {
 		lblSX.setForeground(Color.WHITE);
 		lblSX.setFont(new Font("Arial", Font.BOLD, 15));
 		pnlTimKiem.add(lblSX);
-		String[] loai = { "Mã hóa đơn", "Tổng số tiền thanh toán"};
+		String[] loai = { "Mã hóa đơn", "Tổng số tiền thanh toán" };
 		cmbTieuChi = new JComboBox<String>(loai);
 		cmbTieuChi.setBounds(12, 400, 170, 30);
 		cmbTieuChi.setFocusable(false);
@@ -248,12 +245,12 @@ public class FrameThongKeDoanhThu extends JFrame  {
 		JPanel pnlDanhSach = new JPanel();
 		pnlDanhSach.setBorder(
 				BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "DANH SÁCH HÓA ĐƠN: "));
-		pnlDanhSach.setBounds(230, 75, (int) (d.getWidth() - 455), (int) (d.getHeight() - 250));
+		pnlDanhSach.setBounds(230, 75, (int) (d.getWidth() - 455), (int) (d.getHeight() - 210));
 		pnlDanhSach.setBackground(Color.WHITE);
 		pnlDanhSach.setLayout(new GridLayout(1, 0, 0, 0));
 		pnlContentPane.add(pnlDanhSach);
 
-		String[] header = { "Mã hóa đơn", "Tên nhân viên", "Tên bàn", "Thanh toán" };
+		String[] header = { "Mã hóa đơn", "Tên nhân viên", "Tên bàn", "Ngày đặt", "Thanh toán" };
 		tableModel = new DefaultTableModel(header, 0);
 		table = new JTable(tableModel) {
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
@@ -281,24 +278,20 @@ public class FrameThongKeDoanhThu extends JFrame  {
 		pnlDanhSach.add(new JScrollPane(table, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
 
-
-
 		/*
 		 * Tổng doanh thu
 		 */
 		JLabel lblTongDT = new JLabel("<html>TỔNG DOANH THU: </html>");
 		lblTongDT.setFont(new Font("Times New Roman", Font.BOLD, 25));
-		lblTongDT.setBounds(600, (int) (d.getHeight() - 170), 500, 50);
+		lblTongDT.setBounds(600, (int) (d.getHeight() - 130), 500, 50);
 		pnlContentPane.add(lblTongDT);
 		txtDoanhThu = new JTextField("0.0 VNĐ");
 		txtDoanhThu.setFont(new Font("Times New Roman", Font.BOLD, 25));
-		txtDoanhThu.setBounds(850, (int) (d.getHeight() - 170), 400, 50);
+		txtDoanhThu.setBounds(850, (int) (d.getHeight() - 130), 400, 50);
 		txtDoanhThu.setEditable(false);
 		txtDoanhThu.setBorder(BorderFactory.createEmptyBorder());
 		txtDoanhThu.setBackground(new Color(248, 227, 182));
 		pnlContentPane.add(txtDoanhThu);
-
-
 
 		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
 		rightRenderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
@@ -306,7 +299,500 @@ public class FrameThongKeDoanhThu extends JFrame  {
 		table.setDefaultEditor(Object.class, null);
 		table.getTableHeader().setReorderingAllowed(false);
 
+		setEditableJDateChooder(false);
+
+		radHomNay.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				setEditableJDateChooder(false);
+			}
+		});
+
+		radMotTuan.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				setEditableJDateChooder(false);
+			}
+		});
+
+		radMotThang.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				setEditableJDateChooder(false);
+			}
+		});
+
+		radLuaChonKhac.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				setEditableJDateChooder(true);
+			}
+		});
+
+		btnLamMoi.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				radHomNay.setSelected(true);
+				txtNgayMin.setDate(null);
+				txtNgayMax.setDate(null);
+				cmbMaHD.setSelectedIndex(0);
+				cmbTieuChi.setSelectedIndex(0);
+				radTangDan.setSelected(true);
+				txtDoanhThu.setText("0.0 VNĐ");
+				xoaHetDL();
+				List<HoaDon> list;
+				try {
+					list = dao_HD.getHoaDonTrongNgay();
+					docDuLieuDatabaseVaoTableTheoList(list);
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+			}
+		});
+
+		btnTimKiem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				try {
+
+					Date ngayMin = txtNgayMin.getDate();
+					Date ngayMax = txtNgayMax.getDate();
+					String maHD = cmbMaHD.getSelectedItem().toString().trim();
+					int tieuChi = cmbTieuChi.getSelectedIndex();
+					boolean tangDan = radTangDan.isSelected();
+
+					xoaHetDL();
+					List<HoaDon> list = new ArrayList<HoaDon>();
+					if (radHomNay.isSelected()) {
+						list = dao_HD.getHoaDonTrongNgay();
+					} else if (radMotTuan.isSelected()) {
+						list = dao_HD.getHoaDonTrongTuan();
+					} else if (radMotThang.isSelected()) {
+						list = dao_HD.getHoaDonTrongThang();
+					} else if (radLuaChonKhac.isSelected()) {
+						Date denNgay = txtNgayMax.getDate();
+						Date tuNgay = txtNgayMin.getDate();
+						if (tuNgay != null && denNgay != null) {
+							Date min = new Date(tuNgay.getYear(), tuNgay.getMonth(), tuNgay.getDate());
+							Date max = new Date(denNgay.getYear(), denNgay.getMonth(), denNgay.getDate());
+							if (min.after(max)) {
+								JOptionPane.showMessageDialog(null, "Ngày MIN phải nhỏ hơn ngày MAX", "Lỗi",
+										JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+						}
+						list = dao_HD.getHDDAThanhToan();
+						DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+						if (ngayMin != null) {
+							List<HoaDon> listTemp = new ArrayList<HoaDon>();
+							for (HoaDon hd : list) {
+								listTemp.add(hd);
+							}
+							list.clear();
+							for (HoaDon hd : listTemp) {
+								try {
+									String output = df.format(hd.getNgayDat());
+									Date date = new SimpleDateFormat("yyyy-MM-dd").parse(output);
+									if (date.compareTo(ngayMin) >= 0) {
+										list.add(hd);
+									}
+								} catch (ParseException e1) {
+									e1.printStackTrace();
+								}
+							}
+						}
+						if (ngayMax != null) {
+							List<HoaDon> listTemp = new ArrayList<HoaDon>();
+							for (HoaDon hd : list) {
+								listTemp.add(hd);
+							}
+							list.clear();
+							for (HoaDon hd : listTemp) {
+								try {
+									String output = df.format(hd.getNgayDat());
+									Date date = new SimpleDateFormat("yyyy-MM-dd").parse(output);
+									if (date.compareTo(ngayMax) <= 0)
+										list.add(hd);
+								} catch (ParseException e1) {
+									e1.printStackTrace();
+								}
+							}
+						}
+					}
+					if (!maHD.trim().equals("")) {
+						List<HoaDon> listTemp = new ArrayList<HoaDon>();
+						for (HoaDon hd : list) {
+							listTemp.add(hd);
+						}
+						list.clear();
+						for (HoaDon hd : listTemp) {
+							if (hd.getMaHD().trim().contains(maHD)) {
+								list.add(hd);
+							}
+						}
+					}
+					if (list.size() == 0) {
+						txtDoanhThu.setText("0.0 VNĐ");
+						JOptionPane.showMessageDialog(null, "Không có hóa đơn nào phù hợp với tiêu chí", "Lỗi",
+								JOptionPane.ERROR_MESSAGE);
+
+						return;
+					}
+					if (tieuChi == 0)
+						sapXepTheoMaHD(list, tangDan);
+					else if (tieuChi == 1)
+						sapXepTheoDoanhThu(list, tangDan);
+
+					DecimalFormat dfMoney = new DecimalFormat("#,##0.0");
+					for (HoaDon hd : list) {
+
+						NhanVien nv = dao_NV.getNhanVienTheoMa(hd.getMaNV().getMaNV());
+						tableModel.addRow(new Object[] { hd.getMaHD(), nv.getTenNV(), hd.getMaBan().getTenBan(),
+								hd.getNgayDat(), dfMoney.format(hd.getTongTien()) });
+					}
+					/*
+					 * Tính tổng tiền thanh toán
+					 */
+					int row = table.getRowCount();
+
+					double total = 0;
+					for (int i = 0; i < row; i++) {
+						String stringTotal = "";
+						String tongTienThanhToan = tableModel.getValueAt(i, 4).toString();
+						String a[] = tongTienThanhToan.split(",");
+						for (int j = 0; j < a.length; j++) {
+							stringTotal += a[j];
+						}
+						total += Double.parseDouble(stringTotal);
+					}
+					if (total == 0)
+						txtDoanhThu.setText("0.0 VNĐ");
+					else
+						txtDoanhThu.setText(dfMoney.format(total) + " VNĐ");
+				} catch (Exception e2) {
+					// TODO: handle exception
+					e2.printStackTrace();
+				}
+
+			}
+		});
+
+		btnHoaDon.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				int r = table.getSelectedRow();
+				if (r == -1) {
+					JOptionPane.showMessageDialog(null, "Vui phòng chọn bàn cần xem hóa đơn!");
+				} else {
+					String tenBan = tableModel.getValueAt(r, 2).toString();
+					String maHD = "";
+					Date date_temp = null;
+					NhanVien nv_temp = null;
+					try {
+						List<HoaDon> list = dao_HD.getHDChuaThanhToan();
+						for (HoaDon hd_temp : list) {
+							if (hd_temp.getMaBan().getTenBan().equalsIgnoreCase(tenBan)) {
+								maHD = hd_temp.getMaHD();
+								date_temp = hd_temp.getNgayDat();
+								nv_temp = hd_temp.getMaNV();
+							}
+						}
+
+						NhanVien nv = dao_NV.getNhanVienTheoMa(nv_temp.getMaNV());
+
+						new FrameHoaDonTinhTien(nv.getTenNV(), maHD, date_temp, tenBan).setVisible(true);
+					} catch (RemoteException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+
+		btnXuatExcel.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				int r = table.getRowCount();
+				if (r != 0) {
+					JFileChooser fileDialog = new JFileChooser("excel") {
+						@Override
+						protected JDialog createDialog(Component parent) throws HeadlessException {
+							JDialog dialog = super.createDialog(parent);
+							ImageIcon icon = new ImageIcon("image/logodark.png");
+							dialog.setIconImage(icon.getImage());
+							return dialog;
+						}
+					};
+					FileFilter filter = new FileNameExtensionFilter("Excel(.xls)", ".xls");
+					fileDialog.setAcceptAllFileFilterUsed(false);
+					fileDialog.addChoosableFileFilter(filter);
+					int returnVal = fileDialog.showSaveDialog(null);
+					if (returnVal == JFileChooser.APPROVE_OPTION) {
+						java.io.File file = fileDialog.getSelectedFile();
+						String filePath = file.getAbsolutePath();
+						if (!(filePath.endsWith(".xls") || filePath.endsWith(".xlsx"))) {
+							filePath += ".xls";
+						}
+						if (xuatExcel(filePath))
+							JOptionPane.showMessageDialog(null, "Ghi file thành công!!", "Thành công",
+									JOptionPane.INFORMATION_MESSAGE);
+						else
+							JOptionPane.showMessageDialog(null, "Ghi file thất bại!!", "Lỗi",
+									JOptionPane.ERROR_MESSAGE);
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Không được xuất danh sách rỗng!");
+				}
+
+			}
+		});
+
+		docDuLieuVaoCmbMaHD();
+
 		return pnlContentPane;
 	}
 
+	public void sapXepTheoMaHD(List<HoaDon> list, boolean tangDan) {
+		Collections.sort(list, new Comparator<HoaDon>() {
+			@Override
+			public int compare(HoaDon o1, HoaDon o2) {
+				if (tangDan) {
+					if (o1 != null && o2 != null)
+						return o1.getMaHD().compareToIgnoreCase(o2.getMaHD());
+					return 0;
+				} else {
+					if (o1 != null && o2 != null)
+						return o2.getMaHD().compareToIgnoreCase(o1.getMaHD());
+					return 0;
+				}
+			}
+		});
+	}
+
+	public void sapXepTheoDoanhThu(List<HoaDon> list, boolean tangDan) {
+		Collections.sort(list, new Comparator<HoaDon>() {
+			@Override
+			public int compare(HoaDon o1, HoaDon o2) {
+				if (tangDan) {
+					if (o1 != null && o2 != null)
+						return Double.compare(o1.getTongTien(), o2.getTongTien());
+					return 0;
+				} else {
+					if (o1 != null && o2 != null)
+						return Double.compare(o2.getTongTien(), o1.getTongTien());
+					return 0;
+				}
+			}
+		});
+	}
+
+	private void xoaHetDL() {
+		DefaultTableModel dm = (DefaultTableModel) table.getModel();
+		dm.setRowCount(0);
+	}
+
+	public void docDuLieuDatabaseVaoTableTheoList(List<HoaDon> list) {
+		DecimalFormat df = new DecimalFormat("#,##0.0");
+		double tongDoanhThu = 0;
+		for (HoaDon hd : list) {
+			NhanVien nv = dao_NV.getNhanVienTheoMa(hd.getMaNV().getMaNV());
+			tableModel.addRow(new Object[] { hd.getMaHD(), nv.getTenNV(), hd.getMaBan().getTenBan(), hd.getNgayDat(),
+					df.format(hd.getTongTien()) });
+			tongDoanhThu += hd.getTongTien();
+		}
+		if (tongDoanhThu == 0)
+			txtDoanhThu.setText("0.0 VNĐ");
+		else
+			txtDoanhThu.setText(df.format(tongDoanhThu) + " VNĐ");
+	}
+
+	public void docDuLieuDatabaseVaoTable() throws RemoteException {
+		List<HoaDon> list = dao_HD.getHDDAThanhToan();
+		DecimalFormat df = new DecimalFormat("#,##0.0");
+		double tongDoanhThu = 0;
+		for (HoaDon hd : list) {
+			NhanVien nv = dao_NV.getNhanVienTheoMa(hd.getMaNV().getMaNV());
+			tableModel.addRow(new Object[] { hd.getMaHD(), nv.getTenNV(), hd.getMaBan().getTenBan(), hd.getNgayDat(),
+					df.format(hd.getTongTien()) });
+			tongDoanhThu += hd.getTongTien();
+		}
+		if (tongDoanhThu == 0)
+			txtDoanhThu.setText("0.0 VNĐ");
+		else
+			txtDoanhThu.setText(df.format(tongDoanhThu) + " VNĐ");
+	}
+
+	public void docDuLieuVaoCmbMaHD() throws RemoteException {
+		List<HoaDon> list = dao_HD.getHDDAThanhToan();
+		cmbMaHD.addItem("");
+		for (HoaDon hd : list) {
+			cmbMaHD.addItem(hd.getMaHD());
+		}
+	}
+
+	public void setEditableJDateChooder(boolean trangThai) {
+		txtNgayMax.setEnabled(trangThai);
+		txtNgayMin.setEnabled(trangThai);
+	}
+
+	public boolean xuatExcel(String filePath) {
+		try {
+			FileOutputStream fileOut = new FileOutputStream(filePath);
+			// Tạo sheet Danh sách khách hàng
+			HSSFWorkbook workbook = new HSSFWorkbook();
+			HSSFSheet worksheet = workbook.createSheet("DANH SÁCH HÓA ĐƠN");
+
+			HSSFRow row;
+			HSSFCell cell;
+
+			// Dòng 1 tên
+			cell = worksheet.createRow(1).createCell(1);
+
+			HSSFFont newFont = cell.getSheet().getWorkbook().createFont();
+			newFont.setBold(true);
+			newFont.setFontHeightInPoints((short) 13);
+			CellStyle styleTenDanhSach = worksheet.getWorkbook().createCellStyle();
+			styleTenDanhSach.setAlignment(HorizontalAlignment.CENTER);
+			styleTenDanhSach.setFont(newFont);
+
+			cell.setCellValue("DANH SÁCH HÓA ĐƠN");
+			cell.setCellStyle(styleTenDanhSach);
+
+			String[] header = { "STT", "Mã hóa đơn", "Tên nhân viên", "Tên bàn", "Ngày đặt", "Thanh toán" };
+			worksheet.addMergedRegion(new CellRangeAddress(1, 1, 1, header.length));
+
+			// Dòng 2 người lập
+			row = worksheet.createRow(2);
+
+			cell = row.createCell(1);
+			cell.setCellValue("Người lập:");
+			cell = row.createCell(2);
+
+			NhanVien nv = FrameDangNhap.getTaiKhoan().getTenTaiKhoan();
+
+			cell.setCellValue(dao_NV.getNhanVienTheoMa(nv.getMaNV()).getTenNV());
+			worksheet.addMergedRegion(new CellRangeAddress(2, 2, 2, 3));
+
+			// Dòng 3 ngày lập
+			row = worksheet.createRow(3);
+			cell = row.createCell(1);
+			cell.setCellValue("Ngày lập:");
+			cell = row.createCell(2);
+			SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+			cell.setCellValue(df.format(new Date()));
+			worksheet.addMergedRegion(new CellRangeAddress(3, 3, 2, 3));
+
+			// Dòng 4 tổng thanh toán
+			row = worksheet.createRow(4);
+
+			cell = row.createCell(1);
+			cell.setCellValue("Tổng thanh toán:");
+			cell = row.createCell(2);
+
+			double tong = 0;
+			for (int i = 0; i < table.getRowCount(); i++) {
+				String luong[] = tableModel.getValueAt(i, 4).toString().split(",");
+				String tienLuong = "";
+				for (int t = 0; t < luong.length; t++)
+					tienLuong += luong[t];
+				tong += Double.parseDouble(tienLuong);
+			}
+
+			cell.setCellValue(tong + " VNĐ");
+			worksheet.addMergedRegion(new CellRangeAddress(4, 4, 2, 3));
+
+			// Dòng 5 tên các cột
+			row = worksheet.createRow(5);
+
+			HSSFFont fontHeader = cell.getSheet().getWorkbook().createFont();
+			fontHeader.setBold(true);
+
+			CellStyle styleHeader = worksheet.getWorkbook().createCellStyle();
+			styleHeader.setFont(fontHeader);
+			styleHeader.setBorderBottom(BorderStyle.THIN);
+			styleHeader.setBorderTop(BorderStyle.THIN);
+			styleHeader.setBorderLeft(BorderStyle.THIN);
+			styleHeader.setBorderRight(BorderStyle.THIN);
+			styleHeader.setAlignment(HorizontalAlignment.CENTER);
+
+			styleHeader.setFillForegroundColor(IndexedColors.LIGHT_CORNFLOWER_BLUE.getIndex());
+			styleHeader.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+
+			for (int i = 0; i < header.length; i++) {
+				cell = row.createCell(i + 1);
+				cell.setCellValue(header[i]);
+				cell.setCellStyle(styleHeader);
+			}
+
+			if (table.getRowCount() == 0) {
+				return false;
+			}
+
+			HSSFFont fontRow = cell.getSheet().getWorkbook().createFont();
+			fontRow.setBold(false);
+
+			CellStyle styleRow = worksheet.getWorkbook().createCellStyle();
+			styleRow.setFont(fontRow);
+			styleRow.setBorderBottom(BorderStyle.THIN);
+			styleRow.setBorderTop(BorderStyle.THIN);
+			styleRow.setBorderLeft(BorderStyle.THIN);
+			styleRow.setBorderRight(BorderStyle.THIN);
+
+			// Ghi dữ liệu vào bảng
+			int STT = 0;
+			for (int i = 0; i < table.getRowCount(); i++) {
+				row = worksheet.createRow(6 + i);
+				for (int j = 0; j < header.length; j++) {
+					cell = row.createCell(j + 1);
+					if (STT == i) {
+						cell.setCellValue(STT + 1);
+						STT++;
+					} else {
+						if (table.getValueAt(i, j - 1) != null) {
+							if (j == header.length - 1) {
+								String luong[] = tableModel.getValueAt(i, j - 1).toString().split(",");
+								String tienLuong = "";
+								for (int t = 0; t < luong.length; t++)
+									tienLuong += luong[t];
+								cell.setCellValue(Double.parseDouble(tienLuong));
+							} else
+								cell.setCellValue(table.getValueAt(i, j - 1).toString().trim());
+						}
+					}
+					cell.setCellStyle(styleRow);
+				}
+			}
+
+			for (int i = 1; i < header.length + 1; i++) {
+				worksheet.autoSizeColumn(i);
+			}
+
+			workbook.write(fileOut);
+			workbook.close();
+			fileOut.flush();
+			fileOut.close();
+			return true;
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Tên file đã tồn tại!");
+			return false;
+		}
+	}
 }

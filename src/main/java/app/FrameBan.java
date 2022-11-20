@@ -9,11 +9,8 @@ import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.FileOutputStream;
 import java.rmi.RemoteException;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,8 +55,6 @@ import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
-
-import dao.DAO_Ban;
 import dao.DAO_NhanVien;
 import dao.impl.DAOImpl_Ban;
 import dao.impl.DAOImpl_NhanVien;
@@ -77,9 +72,6 @@ public class FrameBan extends JFrame  {
 	public static JComboBox<String> cmbMaPhong;
 	public static JComboBox<String> cmbTenPhong;
 	private static DAOImpl_Ban dao_Ban;
-	private JTextField txtGiaMin;
-	private JTextField txtGiaMax;
-	private JComboBox<String> cmbLoaiPhong;
 	private JComboBox<String> cmbTrangThai;
 	private JButton btnXuatExcel;
 	private JComboBox<String> cmbTieuChi;
@@ -88,6 +80,7 @@ public class FrameBan extends JFrame  {
 
 
 	public JPanel createPanelPhongHat() throws ParseException, RemoteException {
+		dao_Ban = new DAOImpl_Ban();
 		
 		Toolkit toolkit = this.getToolkit(); /* Lấy độ phân giải màn hình */
 		Dimension d = toolkit.getScreenSize();
@@ -280,7 +273,12 @@ public class FrameBan extends JFrame  {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				new FormThemBan().setVisible(true);
+				try {
+					new FormThemBan().setVisible(true);
+				} catch (RemoteException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		
@@ -304,7 +302,6 @@ public class FrameBan extends JFrame  {
 				if (result == 0) {
 					String maBan = tableModel.getValueAt(r, 0).toString();
 					try {
-						dao_Ban = new DAOImpl_Ban();
 						dao_Ban.xoaBan(maBan);
 						tableModel.removeRow(r);
 						JOptionPane.showMessageDialog(null, "Xóa thành công!");
