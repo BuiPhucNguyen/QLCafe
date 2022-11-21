@@ -97,8 +97,8 @@ public class GUI_NhanVien extends JFrame implements ActionListener, MouseListene
 
 		/* add tab with JPanel */
 		tabbedPane.addTab("TRANG CHỦ", new ImageIcon("image/trangchu.png"), pnlTrangChu, "TRANG CHỦ");
-		tabbedPane.addTab("ĐẶT BÀN", new ImageIcon("image/khachhang.png"), pnlDatPhong, "ĐẶT BÀN");
-		tabbedPane.addTab("THANH TOÁN", new ImageIcon("image/phonghat.png"), pnlTraPhong, "THANH TOÁN");
+		tabbedPane.addTab("ĐẶT BÀN", new ImageIcon("image/ban.png"), pnlDatPhong, "ĐẶT BÀN");
+		tabbedPane.addTab("THANH TOÁN", new ImageIcon("image/thanhtoan.png"), pnlTraPhong, "THANH TOÁN");
 //		tabbedPane.addTab("QUẢN LÝ KHÁCH HÀNG", new ImageIcon("image/khachhang.png"), pnlKhachHang, "QUẢN LÝ KHÁCH HÀNG");
 		
 this.addWindowListener(new WindowListener() {
