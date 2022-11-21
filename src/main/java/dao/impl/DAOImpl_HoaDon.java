@@ -16,6 +16,7 @@ import entity.NhanVien;
 import entity.TaiKhoan;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.transaction.Transactional;
 
 public class DAOImpl_HoaDon extends UnicastRemoteObject implements DAO_HoaDon {
 

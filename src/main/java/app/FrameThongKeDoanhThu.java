@@ -250,7 +250,7 @@ public class FrameThongKeDoanhThu extends JFrame {
 		pnlDanhSach.setLayout(new GridLayout(1, 0, 0, 0));
 		pnlContentPane.add(pnlDanhSach);
 
-		String[] header = { "Mã hóa đơn", "Tên nhân viên", "Tên bàn", "Ngày đặt", "Thanh toán" };
+		String[] header = { "Mã hóa đơn", "Tên nhân viên", "Tên bàn", "Ngày đặt", "Tổng thanh toán" };
 		tableModel = new DefaultTableModel(header, 0);
 		table = new JTable(tableModel) {
 			public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
@@ -295,7 +295,7 @@ public class FrameThongKeDoanhThu extends JFrame {
 
 		DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
 		rightRenderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
-		table.getColumn("Thanh toán").setCellRenderer(rightRenderer);
+		table.getColumn("Tổng thanh toán").setCellRenderer(rightRenderer);
 		table.setDefaultEditor(Object.class, null);
 		table.getTableHeader().setReorderingAllowed(false);
 
@@ -505,7 +505,7 @@ public class FrameThongKeDoanhThu extends JFrame {
 					Date date_temp = null;
 					NhanVien nv_temp = null;
 					try {
-						List<HoaDon> list = dao_HD.getHDChuaThanhToan();
+						List<HoaDon> list = dao_HD.getHDDAThanhToan();
 						for (HoaDon hd_temp : list) {
 							if (hd_temp.getMaBan().getTenBan().equalsIgnoreCase(tenBan)) {
 								maHD = hd_temp.getMaHD();

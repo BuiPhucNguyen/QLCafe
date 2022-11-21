@@ -145,4 +145,22 @@ public class DAOImpl_Ban extends UnicastRemoteObject implements DAO_Ban {
 		return null;
 	}
 
+	@Override
+	public Ban getBanTheoMa(String ma) throws RemoteException {
+EntityTransaction tr = em.getTransaction();
+		
+		try {
+			tr.begin();
+
+			Ban b = (Ban) em.createNativeQuery("select * from dbo.Ban where maBan = N'"+ma+"'", Ban.class).getSingleResult();
+			
+			tr.commit();
+			return b;
+		} catch (Exception e) {
+			e.printStackTrace();
+			tr.rollback();
+		}
+		return null;
+	}
+
 }

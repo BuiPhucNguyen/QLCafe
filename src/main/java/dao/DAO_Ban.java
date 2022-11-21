@@ -12,6 +12,7 @@ public interface DAO_Ban extends Remote {
 	public List<Ban> getAllBanTrong() throws RemoteException;
 	public List<Ban> getAllBanDaDat() throws RemoteException;
 	public Ban getBanTheoTen(String ten) throws RemoteException;
+	public Ban getBanTheoMa(String ma) throws RemoteException;
 	public boolean xoaBan(String id) throws RemoteException;
 	public boolean themBan(Ban b) throws RemoteException;
 	public boolean capnhatBan(Ban b) throws RemoteException;

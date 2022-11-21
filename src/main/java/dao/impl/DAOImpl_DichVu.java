@@ -122,5 +122,22 @@ public class DAOImpl_DichVu extends UnicastRemoteObject implements DAO_DichVu {
 		}
 		return null;
 	}
+	@Override
+	public Nuoc getDVTheoMa(String ma) throws RemoteException {
+EntityTransaction tr = em.getTransaction();
+		
+		try {
+			tr.begin();
+
+			Nuoc n = (Nuoc) em.createNativeQuery("select * from dbo.Nuoc where maNuoc = N'"+ma+"'", Nuoc.class).getSingleResult();
+			
+			tr.commit();
+			return n;
+		} catch (Exception e) {
+			e.printStackTrace();
+			tr.rollback();
+		}
+		return null;
+	}
 
 }

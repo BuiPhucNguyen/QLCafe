@@ -832,8 +832,8 @@ public class FrameDatBan extends JFrame {
 				if (txtSoLuong.getText().trim().length() != 0) {
 					try {
 						int sl = Integer.parseInt(txtSoLuong.getText());
-						if (sl <= 0) {
-							JOptionPane.showMessageDialog(null, "Số lượng phải lớn hơn 0!");
+						if (sl <= 0 || sl >100) {
+							JOptionPane.showMessageDialog(null, "Số lượng phải lớn hơn 0 và nhỏ hơn 100!");
 							return;
 						}
 					} catch (Exception e2) {
@@ -1005,6 +1005,8 @@ public class FrameDatBan extends JFrame {
 	}
 
 	public static void docDuLieuDatabaseVaoTableHD(String tenBan) throws RemoteException {
+		dao_HD = new DAOImpl_HoaDon();
+		dao_CTHD = new DAOImpl_CTHD();
 		String maHD = "";
 		List<HoaDon> listhd = dao_HD.getHDChuaThanhToan();
 		for (HoaDon hd_temp : listhd) {
