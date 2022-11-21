@@ -50,7 +50,8 @@ public class DAOImpl_CTHD extends UnicastRemoteObject implements DAO_CTHD {
 		List<ChiTietHoaDon> list = new ArrayList<ChiTietHoaDon>();
 		try {
 			tr.begin();
-
+			em.clear();
+			em.clear();
 			list = em.createNativeQuery("select * from ChiTietHoaDon where maHD = N'" + id + "'", ChiTietHoaDon.class)
 					.getResultList();
 

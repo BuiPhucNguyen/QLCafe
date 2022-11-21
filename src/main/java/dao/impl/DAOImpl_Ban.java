@@ -30,7 +30,7 @@ public class DAOImpl_Ban extends UnicastRemoteObject implements DAO_Ban {
 		List<Ban> list = new ArrayList<Ban>();
 		try {
 			tr.begin();
-
+			em.clear();
 			list = em.createNativeQuery("select * from Ban", Ban.class).getResultList();
 			
 			tr.commit();
@@ -97,7 +97,7 @@ public class DAOImpl_Ban extends UnicastRemoteObject implements DAO_Ban {
 		List<Ban> list = new ArrayList<Ban>();
 		try {
 			tr.begin();
-
+			em.clear();
 			list = em.createNativeQuery("select * from dbo.Ban where trangThai = 0", Ban.class).getResultList();
 			
 			tr.commit();
@@ -115,7 +115,7 @@ public class DAOImpl_Ban extends UnicastRemoteObject implements DAO_Ban {
 		List<Ban> list = new ArrayList<Ban>();
 		try {
 			tr.begin();
-
+			em.clear();
 			list = em.createNativeQuery("select * from dbo.Ban where trangThai = 1", Ban.class).getResultList();
 			
 			tr.commit();
@@ -133,7 +133,7 @@ public class DAOImpl_Ban extends UnicastRemoteObject implements DAO_Ban {
 		
 		try {
 			tr.begin();
-
+			em.clear();
 			Ban b = (Ban) em.createNativeQuery("select * from dbo.Ban where tenBan = N'"+ten+"'", Ban.class).getSingleResult();
 			
 			tr.commit();
@@ -151,7 +151,7 @@ EntityTransaction tr = em.getTransaction();
 		
 		try {
 			tr.begin();
-
+			em.clear();
 			Ban b = (Ban) em.createNativeQuery("select * from dbo.Ban where maBan = N'"+ma+"'", Ban.class).getSingleResult();
 			
 			tr.commit();

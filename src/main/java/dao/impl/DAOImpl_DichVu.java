@@ -30,7 +30,7 @@ public class DAOImpl_DichVu extends UnicastRemoteObject implements DAO_DichVu {
 		List<Nuoc> list = new ArrayList<Nuoc>();
 		try {
 			tr.begin();
-
+			em.clear();
 			list = em.createNativeQuery("select * from Nuoc", Nuoc.class).getResultList();
 			
 			tr.commit();
@@ -94,7 +94,7 @@ public class DAOImpl_DichVu extends UnicastRemoteObject implements DAO_DichVu {
 		List<Nuoc> list = new ArrayList<Nuoc>();
 		try {
 			tr.begin();
-
+			em.clear();
 			list = em.createNativeQuery("select * from dbo.Nuoc where trangThai = 1", Nuoc.class).getResultList();
 			
 			tr.commit();
@@ -111,7 +111,7 @@ public class DAOImpl_DichVu extends UnicastRemoteObject implements DAO_DichVu {
 		
 		try {
 			tr.begin();
-
+			em.clear();
 			Nuoc n = (Nuoc) em.createNativeQuery("select * from dbo.Nuoc where tenNuoc = N'"+ten+"'", Nuoc.class).getSingleResult();
 			
 			tr.commit();
@@ -128,7 +128,7 @@ EntityTransaction tr = em.getTransaction();
 		
 		try {
 			tr.begin();
-
+			em.clear();
 			Nuoc n = (Nuoc) em.createNativeQuery("select * from dbo.Nuoc where maNuoc = N'"+ma+"'", Nuoc.class).getSingleResult();
 			
 			tr.commit();

@@ -51,7 +51,7 @@ public class DAOImpl_HoaDon extends UnicastRemoteObject implements DAO_HoaDon {
 		List<HoaDon> list = new ArrayList<HoaDon>();
 		try {
 			tr.begin();
-
+			em.clear();
 			list = em.createNativeQuery("select * from HoaDon", HoaDon.class).getResultList();
 			
 			tr.commit();
@@ -69,7 +69,7 @@ public class DAOImpl_HoaDon extends UnicastRemoteObject implements DAO_HoaDon {
 		List<HoaDon> list = new ArrayList<HoaDon>();
 		try {
 			tr.begin();
-
+			em.clear();
 			list = em.createNativeQuery("select * from HoaDon where daThanhToan = 0", HoaDon.class).getResultList();
 			
 			tr.commit();
@@ -104,7 +104,7 @@ public class DAOImpl_HoaDon extends UnicastRemoteObject implements DAO_HoaDon {
 		EntityTransaction tr = em.getTransaction();
 		try {
 			tr.begin();
-
+			em.clear();
 			HoaDon hd = (HoaDon) em.createNativeQuery("select * from HoaDon where maHD = N'"+id+"'", HoaDon.class).getSingleResult();
 			
 			tr.commit();
@@ -160,6 +160,7 @@ public class DAOImpl_HoaDon extends UnicastRemoteObject implements DAO_HoaDon {
 		List<HoaDon> list = new ArrayList<HoaDon>();
 		try {
 			tr.begin();
+			em.clear();
 			String sql = "SELECT [maHD]\r\n"
 					+ "      ,[maBan]\r\n"
 					+ "      ,[maNV]\r\n"
@@ -185,6 +186,7 @@ public class DAOImpl_HoaDon extends UnicastRemoteObject implements DAO_HoaDon {
 		List<HoaDon> list = new ArrayList<HoaDon>();
 		try {
 			tr.begin();
+			em.clear();
 			String sql = "SELECT [maHD]\r\n"
 					+ "      ,[maBan]\r\n"
 					+ "      ,[maNV]\r\n"
@@ -210,6 +212,7 @@ public class DAOImpl_HoaDon extends UnicastRemoteObject implements DAO_HoaDon {
 		List<HoaDon> list = new ArrayList<HoaDon>();
 		try {
 			tr.begin();
+			em.clear();
 			String sql = "SELECT [maHD]\r\n"
 					+ "      ,[maBan]\r\n"
 					+ "      ,[maNV]\r\n"
@@ -234,7 +237,7 @@ public class DAOImpl_HoaDon extends UnicastRemoteObject implements DAO_HoaDon {
 		EntityTransaction tr = em.getTransaction();
 		try {
 			tr.begin();
-
+			em.clear();
 			HoaDon hd = (HoaDon) em.createNativeQuery("select * from HoaDon where maHD = N'"+id+"' and daThanhToan = 1", HoaDon.class).getSingleResult();
 			
 			tr.commit();
@@ -252,7 +255,7 @@ public class DAOImpl_HoaDon extends UnicastRemoteObject implements DAO_HoaDon {
 		List<HoaDon> list = new ArrayList<HoaDon>();
 		try {
 			tr.begin();
-
+			em.clear();
 			list = em.createNativeQuery("select * from HoaDon where daThanhToan = 1", HoaDon.class).getResultList();
 			
 			tr.commit();

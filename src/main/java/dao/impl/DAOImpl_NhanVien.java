@@ -28,7 +28,7 @@ public class DAOImpl_NhanVien extends UnicastRemoteObject implements DAO_NhanVie
 		List<NhanVien> list = new ArrayList<NhanVien>();
 		try {
 			tr.begin();
-
+			em.clear();
 			list = em.createNativeQuery("select * from NhanVien", NhanVien.class).getResultList();
 			
 			tr.commit();
@@ -47,7 +47,7 @@ public class DAOImpl_NhanVien extends UnicastRemoteObject implements DAO_NhanVie
 		NhanVien nv = null;
 		try {
 			tr.begin();
-
+			em.clear();
 			nv = (NhanVien) em.createNativeQuery("select * from NhanVien where maNV = '"+id+"'", NhanVien.class).getSingleResult();
 			
 			tr.commit();
@@ -113,7 +113,7 @@ public class DAOImpl_NhanVien extends UnicastRemoteObject implements DAO_NhanVie
 		List<NhanVien> list = new ArrayList<NhanVien>();
 		try {
 			tr.begin();
-
+			em.clear();
 			list = em.createNativeQuery("select * from NhanVien where chucVu = N'"+chucVu+"'", NhanVien.class).getResultList();
 			
 			tr.commit();

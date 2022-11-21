@@ -44,7 +44,7 @@ public class DAOImpl_TaiKhoan extends UnicastRemoteObject implements DAO_TaiKhoa
 		List<TaiKhoan> list = new ArrayList<TaiKhoan>();
 		try {
 			tr.begin();
-
+			em.clear();
 			list = em.createNativeQuery("select * from TaiKhoan", TaiKhoan.class).getResultList();
 			
 			tr.commit();
