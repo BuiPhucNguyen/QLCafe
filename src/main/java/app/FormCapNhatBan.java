@@ -29,7 +29,7 @@ public class FormCapNhatBan extends JFrame implements KeyListener {
 	public FormCapNhatBan() throws RemoteException {
 		dao_Ban = new DAOImpl_Ban();
 		// ------------------
-		setTitle("CẬP NHẬT PHÒNG");
+		setTitle("CẬP NHẬT BÀN");
 		setSize(380, 170);
 		setLocationRelativeTo(null);
 		ImageIcon icon = new ImageIcon("image/logodark.png");
